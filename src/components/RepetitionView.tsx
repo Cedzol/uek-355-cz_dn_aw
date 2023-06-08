@@ -1,15 +1,15 @@
 import {Dimensions, Image, StyleSheet, Text, View} from "react-native";
 import {RepetitionType} from "../../assets/models/Enums";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from "react";
+
+const RepeatIcon = <Icon name="repeat" size={30} color="#900" />;
 
 export default function RepetitionView(props : any) {
     return (
         <View style={styles.container}>
             <Text>
-            {props.reminder.repetition === RepetitionType.Unique ?
-                <Image style={styles.images} source={require('../../assets/repeat-once.png')}></Image>
-                :
-                <Image style={styles.images} source={require('../../assets/repeat-endless.png')}></Image>
-            }
+            <Icon name="repeat" size={24} color="#C7C6CA" />
             <Text>hello</Text>
             </Text>
         </View>
