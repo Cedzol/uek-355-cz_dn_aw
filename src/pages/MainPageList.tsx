@@ -1,9 +1,8 @@
-import {Dimensions, StyleSheet, Text, View} from "react-native";
+import {Dimensions, ScrollView, StyleSheet, Text, View} from "react-native";
 import {Button, List} from 'react-native-paper';
 import {useState} from "react";
 import {Reminder} from "../../assets/models/Reminder";
 import {RepetitionType} from "../../assets/models/Enums";
-import {useWindowDimensions} from 'react-native';
 import TimeView from "../components/TimeView";
 import RepetitionView from "../components/RepetitionView";
 
@@ -42,9 +41,32 @@ export default function MainPageList(){
         specificUniqueDate : new Date("2005-09-12")
     }
 
-    const [reminders, setReminders] = useState([r1, r2, r3])
+    let r4 : Reminder = {
+        title : "Saufen",
+        details : "Wochenende, saufen!",
+        repetition: RepetitionType.Unique,
+        time: {
+            hours : '10',
+            minutes : '00'
+        },
+        specificUniqueDate : new Date("2005-09-12")
+    }
+
+    let r5 : Reminder = {
+        title : "Saufen",
+        details : "Wochenende, saufen!",
+        repetition: RepetitionType.Unique,
+        time: {
+            hours : '10',
+            minutes : '00'
+        },
+        specificUniqueDate : new Date("2005-09-12")
+    }
+
+    const [reminders, setReminders] = useState([r1, r2, r3,r4, r5, r5])
 
     return (
+        <ScrollView>
         <View>
             {reminders.map((reminder : Reminder, index) => (
                 <List.Item
@@ -71,6 +93,7 @@ export default function MainPageList(){
                 Press me
             </Button>
         </View>
+        </ScrollView>
     );
 }
 
@@ -89,7 +112,9 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderColor: "#3c3d45",
         borderWidth: 1,
-        borderRadius: 12
+        borderRadius: 12,
+        marginTop : 40,
+
     },
 
     textTitle : {
