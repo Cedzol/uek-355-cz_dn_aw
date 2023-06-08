@@ -82,16 +82,18 @@ export default function MainPageList() {
                         <List.Item
                             key={index}
                             title={reminder.title}
+                            titleStyle={{color: '#C7C6CA', fontSize : 20}}
                             description={() => (
                                 <View>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.textTitle}>{reminder.title}</Text>
+                                        <Text style={styles.textDetail}>{reminder.details}</Text>
                                         <View style={{ marginLeft: 'auto' }}>
                                             <TimeView reminder={reminder}></TimeView>
                                         </View>
                                     </View>
-                                    <Text style={styles.textDetail}>{reminder.details}</Text>
-                                    <RepetitionView reminder={reminder}></RepetitionView>
+                                    <View style={styles.repetitionView}>
+                                        <RepetitionView reminder={reminder}></RepetitionView>
+                                    </View>
 
                                 </View>
                             )}
@@ -117,6 +119,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         color: '#C7C6CA'
+    },
+
+    repetitionView : {
+        paddingTop : 10
     },
 
     topBar: {
@@ -158,14 +164,12 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginBottom: 20,
         elevation: 4,
+        color: '#C7C6CA'
     },
 
-    textTitle: {
-        fontSize: 18,
-        color: '#bfc0c3'
-    },
 
     textDetail: {
+        paddingTop : 4,
         fontSize: 12,
         color: '#bfc0c3',
     },

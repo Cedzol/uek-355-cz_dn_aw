@@ -1,6 +1,6 @@
 export enum RepetitionType {
-    Unique = "unique",
-    Hourly = "hourly",
-    Daily = "daily",
-    Weekly = "weekly"
+    Unique = "Einmalig",
+    Hourly = "Stündlich",
+    Daily = "Täglich",
+    Weekly = "Wöchentlich"
 }
