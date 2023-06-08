@@ -1,4 +1,4 @@
-import { Appearance, Dimensions, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
+import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button, List } from 'react-native-paper';
 import { useEffect, useState } from "react";
 import { Reminder } from "../../assets/models/Reminder";
@@ -13,18 +13,8 @@ export default function MainPageList() {
 
     useFonts({
         'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
-      });
+    });
 
-    const [isDarkMode, setIsDarkMode] = useState(false);
-
-    const topBarColor = isDarkMode ? 'white' : 'black';
-const iconColor = isDarkMode ? 'black' : 'white';
-
-    useEffect(() => {
-        const currentMode = Appearance.getColorScheme();
-        setIsDarkMode(currentMode === 'dark');
-      }, []);
-      
     let r1: Reminder = {
         title: "Badge",
         details: "Badge nicht vergessen",
@@ -82,52 +72,46 @@ const iconColor = isDarkMode ? 'black' : 'white';
     const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r5])
 
     return (
-        <ScrollView>
+        <View style={styles.container}>
             <View>
-            <StatusBar backgroundColor={topBarColor} barStyle={isDarkMode ? 'dark-content' : 'light-content'} />
-            <View style={styles.topBar}>
-        <Text style={styles.title}>RemindMe!</Text>
-      </View>
-                {reminders.map((reminder: Reminder, index) => (
-                    <List.Item
-                        key={index}
-                        title={reminder.title}
-                        description={() => (
-                            <View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={styles.textTitle}>{reminder.title}</Text>
-                                    <View style={{ marginLeft: 'auto' }}>
-                                        <TimeView reminder={reminder}></TimeView>
-                                    </View>
-                                </View>
-                                <Text style={styles.textDetail}>{reminder.details}</Text>
-                                <RepetitionView reminder={reminder}></RepetitionView>
-
-                            </View>
-                        )}
-                        style={styles.listItem}
-                    />
-                )
-                )}
-                <View style={{ flex: 1 }}>
-                    {/* Your main content */}
+                <View style={styles.topBar}>
+                    <Text style={styles.title}>RemindMe!</Text>
                 </View>
+                <ScrollView style={styles.content}>
+                    {reminders.map((reminder: Reminder, index) => (
+                        <List.Item
+                            key={index}
+                            title={reminder.title}
+                            description={() => (
+                                <View>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Text style={styles.textTitle}>{reminder.title}</Text>
+                                        <View style={{ marginLeft: 'auto' }}>
+                                            <TimeView reminder={reminder}></TimeView>
+                                        </View>
+                                    </View>
+                                    <Text style={styles.textDetail}>{reminder.details}</Text>
+                                    <RepetitionView reminder={reminder}></RepetitionView>
 
+                                </View>
+                            )}
+                            style={styles.listItem}
+                        />
+                    )
+                    )}
+                </ScrollView>
             </View>
-
             <View style={styles.addButtonContainer}>
-                        <Icon name="plus" size={24} color="#DCE2F9" />
-                    </View>
+                <Icon name="plus" size={24} color="#DCE2F9" />
+            </View>
+        </View>
 
-        </ScrollView>
-        
-        
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: Dimensions.get('window').width,
+        width: '100%',
         flex: 1,
         backgroundColor: '#1D1B20',
         alignItems: 'center',
@@ -141,7 +125,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#999999',
         justifyContent: 'center',
         alignItems: 'center',
-      },
+    },
 
     title: {
         paddingTop: 20,
@@ -149,7 +133,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: 'white',
-      },
+    },
 
     addButtonContainer: {
         position: 'absolute',
@@ -184,6 +168,13 @@ const styles = StyleSheet.create({
     textDetail: {
         fontSize: 12,
         color: '#bfc0c3',
-    }
+    },
+
+    content: {
+        flex: 1,
+        width: '100%',
+        paddingHorizontal: 16,
+        paddingTop: 16,
+      },
 
 });

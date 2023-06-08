@@ -1,12 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as NavigationBar from "expo-navigation-bar";
+import { StyleSheet, Text, View, StatusBar as ReactStatusBar } from 'react-native';
 import MainPageList from "./src/pages/MainPageList";
+
+NavigationBar.setPositionAsync("absolute");
+NavigationBar.setBackgroundColorAsync("#ffffff01");
 
 export default function App() {
   return (
     <View style={styles.container}>
       <MainPageList></MainPageList>
-      <StatusBar style="auto" />
+      <StatusBar style="auto" backgroundColor="#1D1B20" />
+      <ReactStatusBar barStyle="light-content" backgroundColor="#1D1B20" />
     </View>
   );
 }
