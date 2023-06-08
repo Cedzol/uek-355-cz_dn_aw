@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import MainPageList from "./src/pages/MainPageList";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <MainPageList></MainPageList>
       <StatusBar style="auto" />
     </View>
   );
@@ -13,8 +14,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#1D1B20',
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#C7C6CA'
   },
 });
