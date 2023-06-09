@@ -1,15 +1,21 @@
 import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button, List } from 'react-native-paper';
-import { useEffect, useState } from "react";
 import { Reminder } from "../../assets/models/Reminder";
 import { RepetitionType } from "../../assets/models/Enums";
 import TimeView from "../components/TimeView";
 import RepetitionView from "../components/RepetitionView";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFonts } from 'expo-font';
-import React from "react";
+import React, {useState} from "react";
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+type RootStackParamList = {
+    MainPageList: undefined;
+    CreateReminder: undefined;
+};
 
-export default function MainPageList() {
+type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
+
+export default function MainPageList({ navigation , route}: Props) {
 
     useFonts({
         'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
@@ -104,7 +110,7 @@ export default function MainPageList() {
                                     <View style={{ flexDirection: 'row' }}>
                                         <Text style={styles.textDetail}>{reminder.details}</Text>
                                         <View style={{ marginLeft: 'auto' }}>
-                                            <TimeView reminder={reminder}></TimeView>
+                                            <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26}></TimeView>
                                         </View>
                                     </View>
                                     <View style={styles.repetitionView}>
@@ -120,7 +126,9 @@ export default function MainPageList() {
                 </ScrollView>
             </View>
             <View style={styles.addButtonContainer}>
-                <Icon name="plus" size={24} color="#DCE2F9" />
+                <Button onPress={() => navigation.navigate('CreateReminder')}>
+                    <Icon name="plus" size={24} color="#DCE2F9" />
+                </Button>
             </View>
         </View>
 
