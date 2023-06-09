@@ -12,6 +12,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment/moment";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {RepetitionType} from "../../assets/models/Enums";
+import WeekdaySelector from "../molecules/WeekdaySelector";
 
 type RootStackParamList = {
     MainPageList: undefined;
@@ -82,6 +83,15 @@ export default function CreateReminder({ navigation , route}: Props){
    function handleSubmit() {
         navigation.goBack();
    }
+
+   const [weekdays, setWeekdays] = useState<number[]>([])
+
+    function handleWeekday(dayIndex : number){
+        //handle if weekdays array contains daysIndex
+        //Yes, remove dayIndex from array
+        //No, add dayIndex to weekdays array
+        //todo
+    }
 
     return (
         <View style={styles.container}>
@@ -197,7 +207,7 @@ export default function CreateReminder({ navigation , route}: Props){
                         </View>
                     </View>
                 :
-                    <View style={{width : Dimensions.get('window').width / 1.2}}>
+                    <View style={{width : Dimensions.get('window').width / 1.2, }}>
                         <DropDownPicker
                             open={showDropDown}
                             value={repetitionMode}
@@ -218,8 +228,14 @@ export default function CreateReminder({ navigation , route}: Props){
                         />
 
                         {repetitionMode == RepetitionType.Weekly?
-                            <View>
-                                <Text>Hello</Text>
+                            <View style={{justifyContent : "center", flexDirection : "row", gap : 20, marginTop : 30, zIndex : -1}}>
+                                    <TouchableOpacity onPress={() => handleWeekday(0)}><WeekdaySelector weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday(1)}><WeekdaySelector weekday={"D"}></WeekdaySelector></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday(2)}><WeekdaySelector weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday(3)}><WeekdaySelector weekday={"D"}></WeekdaySelector></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday(4)}><WeekdaySelector weekday={"F"}></WeekdaySelector></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday(5)}><WeekdaySelector weekday={"S"}></WeekdaySelector></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday(6)}><WeekdaySelector weekday={"S"}></WeekdaySelector></TouchableOpacity>
                             </View>
                             : null}
                     </View>
