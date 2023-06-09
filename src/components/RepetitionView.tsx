@@ -1,12 +1,23 @@
-import {Dimensions, Image, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from "react";
 import {RepetitionType} from "../../assets/models/Enums";
 import {Reminder} from "../../assets/models/Reminder";
+import moment from "moment";
 
 export default function RepetitionView(props : any) {
 
-    const reminder : Reminder = props.reminder
+    const reminder : Reminder = props.reminder;
+
+    const daysOfWeek : string[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+
+    let dayString : string [] = []
+
+    if (reminder.repetition == RepetitionType.Weekly) {
+        for (let d of reminder.daysOfWeek!) {
+            dayString.push(" " + daysOfWeek[d])
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -18,16 +29,16 @@ export default function RepetitionView(props : any) {
                 }
                 <View>
                     {reminder.repetition == RepetitionType.Unique ?
-                    <Text style={styles.text}>{ reminder.repetition + ", " + reminder.specificUniqueDate?.toLocaleDateString()}</Text> : null}
-
-                    {reminder.repetition == RepetitionType.Daily ?
-                        <Text style={styles.text}>{ reminder.repetition + ", "}</Text> : null}
+                    <Text style={styles.text}>{ reminder.repetition + ", " + (moment(reminder.specificUniqueDate)).format('DD.MM.YYYY') }</Text> : null}
 
                     {reminder.repetition == RepetitionType.Hourly ?
-                        <Text style={styles.text}>{ reminder.repetition + ", " }</Text> : null}
+                        <Text style={styles.text}>{ reminder.repetition }</Text> : null}
+
+                    {reminder.repetition == RepetitionType.Daily ?
+                        <Text style={styles.text}>{ reminder.repetition }</Text> : null}
 
                     {reminder.repetition == RepetitionType.Weekly ?
-                        <Text style={styles.text}>{ reminder.repetition + ", " }</Text> : null}
+                        <Text style={styles.text}>{ reminder.repetition + "," + dayString}</Text> : null}
 
                 </View>
             </Text>

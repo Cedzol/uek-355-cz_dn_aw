@@ -22,7 +22,8 @@ export default function MainPageList() {
         time: {
             hours: '13',
             minutes: '00'
-        }
+        },
+        nextReminderExecution : new Date("2023-06-10 13:00")
     }
 
     let r2: Reminder = {
@@ -33,7 +34,8 @@ export default function MainPageList() {
         time: {
             hours: '10',
             minutes: '00'
-        }
+        },
+        nextReminderExecution : new Date("2023-06-14 10:00")
     }
 
     let r3: Reminder = {
@@ -44,7 +46,8 @@ export default function MainPageList() {
             hours: '10',
             minutes: '00'
         },
-        specificUniqueDate: new Date("2005-09-12")
+        specificUniqueDate: new Date("2023-06-12"),
+        nextReminderExecution : new Date("2023-06-12 10:00")
     }
 
     let r4: Reminder = {
@@ -55,7 +58,8 @@ export default function MainPageList() {
             hours: '10',
             minutes: '00'
         },
-        specificUniqueDate: new Date("2005-09-12")
+        specificUniqueDate: new Date("2023-06-13"),
+        nextReminderExecution : new Date("2023-06-13 10:00")
     }
 
     let r5: Reminder = {
@@ -66,10 +70,22 @@ export default function MainPageList() {
             hours: '10',
             minutes: '00'
         },
-        specificUniqueDate: new Date("2005-09-12")
+        specificUniqueDate: new Date("2023-06-14"),
+        nextReminderExecution : new Date("2023-06-14 10:00")
     }
 
-    const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r5])
+    let r6 : Reminder = {
+        title: "Atmen",
+        details: "Luft ist wichtig",
+        repetition: RepetitionType.Hourly,
+        time: {
+            hours: '10',
+            minutes: '05'
+        },
+        nextReminderExecution : new Date("2023-06-09 9:05")
+    }
+
+    const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r6])
 
     return (
         <View style={styles.container}>
@@ -122,7 +138,7 @@ const styles = StyleSheet.create({
     },
 
     repetitionView : {
-        paddingTop : 10
+        paddingTop : 15
     },
 
     topBar: {
@@ -156,7 +172,7 @@ const styles = StyleSheet.create({
 
     listItem: {
         width: Dimensions.get('window').width / 1.15,
-        height: 150,
+        height: 155,
         borderStyle: "solid",
         backgroundColor: "#25232A",
         borderColor: "#3c3d45",
