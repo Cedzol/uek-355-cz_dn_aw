@@ -1,4 +1,4 @@
-import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View, Animated } from 'react-native';
 import { Button, Card, DefaultTheme, List, Provider } from 'react-native-paper';
 import { useCallback, useEffect, useState } from 'react';
 import { Reminder } from '../../assets/models/Reminder';
@@ -114,32 +114,41 @@ export default function MainPageList() {
         return null;
     }
 
+    const scrollY = new Animated.Value(0);
+    const topBarBackgroundColor = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['#1D1B20', '#2F2C35'],
+        extrapolate: 'clamp',
+    });
+
     return (
         <Provider theme={MD3Theme}>
             <View style={styles.container} onLayout={onLayoutRootView}>
-                <View>
-                    <ScrollView style={{ paddingTop: 30 }}>
-                        <View style={styles.topBar}>
-                            <Text style={styles.title}>RemindMe!</Text>
-                        </View>
-                        <View style={styles.content}>
-                            {reminders.map((reminder: Reminder, index) => (
-                                <Card key={index} style={styles.card}>
-                                    <Card.Content style={styles.cardContent}>
-                                        <View style={styles.cardTitleContainer}>
-                                            <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
-                                            <TimeView reminder={reminder} style={styles.timeView} />
-                                        </View>
-                                        <Text style={styles.cardDetail}>{reminder.details}</Text>
-                                        <View style={styles.repetitionView}>
-                                            <RepetitionView reminder={reminder} />
-                                        </View>
-                                    </Card.Content>
-                                </Card>
-                            ))}
-                        </View>
-                    </ScrollView>
-                </View>
+                <Animated.View style={[styles.topBar, { backgroundColor: topBarBackgroundColor }]}>
+                    <Text style={styles.title}>RemindMe!</Text>
+                </Animated.View>
+                <ScrollView
+                    style={{ paddingTop: 30 }}
+                    onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
+                    scrollEventThrottle={16}
+                >
+                    <View style={styles.content}>
+                        {reminders.map((reminder: Reminder, index) => (
+                            <Card key={index} style={styles.card}>
+                                <Card.Content style={styles.cardContent}>
+                                    <View style={styles.cardTitleContainer}>
+                                        <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
+                                        <TimeView reminder={reminder} style={styles.timeView} />
+                                    </View>
+                                    <Text style={styles.cardDetail}>{reminder.details}</Text>
+                                    <View style={styles.repetitionView}>
+                                        <RepetitionView reminder={reminder} />
+                                    </View>
+                                </Card.Content>
+                            </Card>
+                        ))}
+                    </View>
+                </ScrollView>
                 <View style={styles.addButtonContainer}>
                     <Icon name="plus" size={24} color="#DCE2F9" />
                 </View>
@@ -164,12 +173,16 @@ const styles = StyleSheet.create({
     },
     topBar: {
         width: Dimensions.get('window').width,
+        paddingTop: 30,
         marginTop: 0,
-        height: 50,
+        height: 90,
         borderBottomWidth: 1,
         borderBottomColor: '#3c3d45',
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        zIndex: 1,
     },
     title: {
         paddingTop: 0,
@@ -187,7 +200,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 4,
+        elevation: 6,
     },
     card: {
         width: Dimensions.get('window').width / 1.1,
@@ -218,7 +231,7 @@ const styles = StyleSheet.create({
         color: '#bfc0c3',
     },
     content: {
-        marginTop: 20,
+        marginTop: 70,
         width: '100%',
         alignItems: 'center',
         marginBottom: 50,
