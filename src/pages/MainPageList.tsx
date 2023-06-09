@@ -1,19 +1,18 @@
 import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Button, List } from 'react-native-paper';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Reminder } from "../../assets/models/Reminder";
 import { RepetitionType } from "../../assets/models/Enums";
 import TimeView from "../components/TimeView";
 import RepetitionView from "../components/RepetitionView";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import React from "react";
 
-export default function MainPageList() {
+SplashScreen.preventAutoHideAsync();
 
-    useFonts({
-        'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
-    });
+export default function MainPageList() {
 
     let r1: Reminder = {
         title: "Badge",
@@ -23,7 +22,7 @@ export default function MainPageList() {
             hours: '13',
             minutes: '00'
         },
-        nextReminderExecution : new Date("2023-06-10 13:00")
+        nextReminderExecution: new Date("2023-06-10 13:00")
     }
 
     let r2: Reminder = {
@@ -35,7 +34,7 @@ export default function MainPageList() {
             hours: '10',
             minutes: '00'
         },
-        nextReminderExecution : new Date("2023-06-14 10:00")
+        nextReminderExecution: new Date("2023-06-14 10:00")
     }
 
     let r3: Reminder = {
@@ -47,7 +46,7 @@ export default function MainPageList() {
             minutes: '00'
         },
         specificUniqueDate: new Date("2023-06-12"),
-        nextReminderExecution : new Date("2023-06-12 10:00")
+        nextReminderExecution: new Date("2023-06-12 10:00")
     }
 
     let r4: Reminder = {
@@ -59,7 +58,7 @@ export default function MainPageList() {
             minutes: '00'
         },
         specificUniqueDate: new Date("2023-06-13"),
-        nextReminderExecution : new Date("2023-06-13 10:00")
+        nextReminderExecution: new Date("2023-06-13 10:00")
     }
 
     let r5: Reminder = {
@@ -71,10 +70,10 @@ export default function MainPageList() {
             minutes: '00'
         },
         specificUniqueDate: new Date("2023-06-14"),
-        nextReminderExecution : new Date("2023-06-14 10:00")
+        nextReminderExecution: new Date("2023-06-14 10:00")
     }
 
-    let r6 : Reminder = {
+    let r6: Reminder = {
         title: "Atmen",
         details: "Luft ist wichtig",
         repetition: RepetitionType.Hourly,
@@ -82,23 +81,37 @@ export default function MainPageList() {
             hours: '10',
             minutes: '05'
         },
-        nextReminderExecution : new Date("2023-06-09 9:05")
+        nextReminderExecution: new Date("2023-06-09 9:05")
     }
 
     const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r6])
 
+    const [fontsLoaded] = Font.useFonts({
+        'ProductSans-Regular': require('./../../assets/fonts/ProductSans-Regular.ttf'),
+    })
+
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
+
+    if (!fontsLoaded) {
+        return null;
+    }
+
     return (
-        <View style={styles.container}>
+        <View style={styles.container} onLayout={onLayoutRootView}>
+            <View style={styles.topBar}>
+                <Text style={styles.title}>RemindMe!</Text>
+            </View>
             <View>
-                <View style={styles.topBar}>
-                    <Text style={styles.title}>RemindMe!</Text>
-                </View>
                 <ScrollView style={styles.content}>
                     {reminders.map((reminder: Reminder, index) => (
                         <List.Item
                             key={index}
                             title={reminder.title}
-                            titleStyle={{color: '#C7C6CA', fontSize : 20}}
+                            titleStyle={{ color: '#C7C6CA', fontSize: 20 }}
                             description={() => (
                                 <View>
                                     <View style={{ flexDirection: 'row' }}>
@@ -136,13 +149,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         color: '#C7C6CA'
     },
-
-    repetitionView : {
-        paddingTop : 15
+    repetitionView: {
+        paddingTop: 15
     },
-
     topBar: {
-        height: 100,
+        width: '100%',
+        marginTop: 110,
+        height: 50,
         borderBottomWidth: 1,
         borderBottomColor: '#999999',
         justifyContent: 'center',
@@ -150,10 +163,9 @@ const styles = StyleSheet.create({
     },
 
     title: {
-        paddingTop: 20,
+        paddingTop: 0,
         fontFamily: 'ProductSans-Regular',
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 24,
         color: 'white',
     },
 
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
     },
 
     listItem: {
-        width: Dimensions.get('window').width / 1.15,
+        width: Dimensions.get('window').width / 1.10,
         height: 155,
         borderStyle: "solid",
         backgroundColor: "#25232A",
@@ -185,7 +197,7 @@ const styles = StyleSheet.create({
 
 
     textDetail: {
-        paddingTop : 4,
+        paddingTop: 4,
         fontSize: 12,
         color: '#bfc0c3',
     },
@@ -195,6 +207,6 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 16,
         paddingTop: 16,
-      },
+    },
 
 });
