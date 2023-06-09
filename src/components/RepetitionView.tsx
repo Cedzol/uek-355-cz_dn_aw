@@ -37,36 +37,42 @@ export default function RepetitionView(props: any) {
     }
 
     return (
-        <Chip
-            icon={reminder.repetition === RepetitionType.Unique ? 'numeric-1' : 'repeat'}
-            mode='outlined'
-        >
-            {reminder.repetition == RepetitionType.Unique ? (
-                <Text style={[styles.text, { marginLeft: 10 }]}>
-                    {reminder.repetition + ', ' + moment(reminder.specificUniqueDate).format('DD.MM.YYYY')}
-                </Text>
-            ) : null}
+        <View onLayout={onLayoutRootView}>
+            <Chip
+                icon={reminder.repetition === RepetitionType.Unique ? 'numeric-1' : 'repeat'}
+                mode='outlined'
+                style={styles.chip}
+            >
+                {reminder.repetition == RepetitionType.Unique ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>
+                        {reminder.repetition + ', ' + moment(reminder.specificUniqueDate).format('DD.MM.YYYY')}
+                    </Text>
+                ) : null}
 
-            {reminder.repetition == RepetitionType.Hourly ? (
-                <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
-            ) : null}
+                {reminder.repetition == RepetitionType.Hourly ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
+                ) : null}
 
-            {reminder.repetition == RepetitionType.Daily ? (
-                <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
-            ) : null}
+                {reminder.repetition == RepetitionType.Daily ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
+                ) : null}
 
-            {reminder.repetition == RepetitionType.Weekly ? (
-                <Text style={[styles.text, { marginLeft: 10 }]}>
-                    {reminder.repetition + ',' + dayString}
-                </Text>
-            ) : null}
+                {reminder.repetition == RepetitionType.Weekly ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>
+                        {reminder.repetition + ',' + dayString}
+                    </Text>
+                ) : null}
 
-        </Chip>
+            </Chip>
+        </View>
     );
 
 }
 
 const styles = StyleSheet.create({
+    chip: {
+        alignSelf: 'flex-start',
+    },
     text: {
         fontFamily: 'ProductSans-Regular',
         color: '#B2C5FF',

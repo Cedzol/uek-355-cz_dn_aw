@@ -127,7 +127,7 @@ export default function MainPageList() {
                                 <Card key={index} style={styles.card}>
                                     <Card.Content style={styles.cardContent}>
                                         <View style={styles.cardTitleContainer}>
-                                            <Text style={styles.cardTitle}>{reminder.title}</Text>
+                                            <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
                                             <TimeView reminder={reminder} style={styles.timeView} />
                                         </View>
                                         <Text style={styles.cardDetail}>{reminder.details}</Text>
@@ -156,12 +156,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     repetitionView: {
+        flex: 1,
         paddingTop: 15,
-        width: 'auto',
     },
     timeView: {
-        flexGrow: 1,
-        float: 'right',
+        alignSelf: 'flex-end',
     },
     topBar: {
         width: Dimensions.get('window').width,
@@ -188,14 +187,11 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 4, // Add shadow if desired
+        elevation: 4,
     },
     card: {
-        width: '90%',
-        borderStyle: 'solid',
-        borderWidth: 1,
+        width: Dimensions.get('window').width / 1.1,
         backgroundColor: '#25232A',
-        borderColor: '#3c3d45',
         marginBottom: 15,
         elevation: 4,
     },
