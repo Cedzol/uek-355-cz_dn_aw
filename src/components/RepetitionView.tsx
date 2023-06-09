@@ -22,7 +22,7 @@ export default function RepetitionView(props: any) {
     <View style={styles.container}>
       <View style={styles.images}>
         {reminder.repetition == RepetitionType.Unique ? (
-          <Icon name="repeat-once" style={styles.icons} size={25} />
+          <Icon name="numeric-1" style={styles.icons} size={25} />
         ) : (
           <Icon name="repeat" style={styles.icons} size={25} />
         )}
