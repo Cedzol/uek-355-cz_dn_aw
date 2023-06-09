@@ -1,9 +1,7 @@
-import {StyleSheet, Text, View} from "react-native";
-import {Reminder} from "../../assets/models/Reminder";
+import { StyleSheet, Text, View } from "react-native";
+import { Reminder } from "../../assets/models/Reminder";
 
-export default function TimeView (props : any){
-
-
+export default function TimeView(props: any) {
 
     return (
         <View>
@@ -23,21 +21,24 @@ export default function TimeView (props : any){
 }
 
 const styles = StyleSheet.create({
-    textColor : {
-        fontSize : 26,
+    textColor: {
+        marginLeft: 3,
+        fontSize: 23,
         color: '#bfc0c3',
     },
 
-    divider : {
+    divider: {
         color: '#bfc0c3',
-        fontSize : 26,
-        marginLeft : 10,
-        marginRight : 10
+        fontSize: 26,
+        marginLeft: 10,
+        marginRight: 10
     },
 
-    textBox : {
-        backgroundColor : '#474850',
-        borderRadius : 4,
-        padding : 2
+    textBox: {
+        height: 40,
+        width: 40,
+        backgroundColor: '#474850',
+        borderRadius: 8,
+        padding: 4,
     }
 });

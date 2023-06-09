@@ -102,35 +102,37 @@ export default function MainPageList() {
 
     return (
         <View style={styles.container} onLayout={onLayoutRootView}>
-            <View style={styles.topBar}>
-                <Text style={styles.title}>RemindMe!</Text>
-            </View>
             <View>
-                <ScrollView style={styles.content}>
-                    {reminders.map((reminder: Reminder, index) => (
-                        <List.Item
-                            key={index}
-                            title={reminder.title}
-                            titleStyle={{ color: '#C7C6CA', fontSize: 20 }}
-                            description={() => (
-                                <View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.textDetail}>{reminder.details}</Text>
-                                        <View style={{ marginLeft: 'auto' }}>
-                                            <TimeView reminder={reminder}></TimeView>
+                <ScrollView style={{ paddingTop: 30 }}>
+                    <View style={styles.topBar}>
+                        <Text style={styles.title}>RemindMe!</Text>
+                    </View>
+                    <View style={styles.content}>
+                        {reminders.map((reminder: Reminder, index) => (
+                            <List.Item
+                                key={index}
+                                title={reminder.title}
+                                titleStyle={{ color: '#C7C6CA', fontSize: 20 }}
+                                description={() => (
+                                    <View>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={styles.textDetail}>{reminder.details}</Text>
+                                            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                                <TimeView reminder={reminder} style={styles.timeView} />
+                                            </View>
+                                        </View>
+                                        <View style={styles.repetitionView}>
+                                            <RepetitionView reminder={reminder} />
                                         </View>
                                     </View>
-                                    <View style={styles.repetitionView}>
-                                        <RepetitionView reminder={reminder}></RepetitionView>
-                                    </View>
-
-                                </View>
-                            )}
-                            style={styles.listItem}
-                        />
-                    )
-                    )}
+                                )}
+                                style={styles.listItem}
+                            />
+                        )
+                        )}
+                    </View>
                 </ScrollView>
+
             </View>
             <View style={styles.addButtonContainer}>
                 <Icon name="plus" size={24} color="#DCE2F9" />
@@ -150,25 +152,28 @@ const styles = StyleSheet.create({
         color: '#C7C6CA'
     },
     repetitionView: {
-        paddingTop: 15
+        paddingTop: 15,
+        width: 'auto',
+    },
+    timeView: {
+        flexGrow: 1,
+        float: 'right',
     },
     topBar: {
-        width: '100%',
-        marginTop: 110,
+        width: Dimensions.get('window').width,
+        marginTop: 0,
         height: 50,
         borderBottomWidth: 1,
-        borderBottomColor: '#999999',
+        borderBottomColor: '#3c3d45',
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     title: {
         paddingTop: 0,
         fontFamily: 'ProductSans-Regular',
         fontSize: 24,
         color: 'white',
     },
-
     addButtonContainer: {
         position: 'absolute',
         bottom: 16,
@@ -181,32 +186,27 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         elevation: 4, // Add shadow if desired
     },
-
     listItem: {
-        width: Dimensions.get('window').width / 1.10,
-        height: 155,
+        width: Dimensions.get('window').width / 1.1,
+        height: "auto",
         borderStyle: "solid",
         backgroundColor: "#25232A",
         borderColor: "#3c3d45",
         borderWidth: 1,
         borderRadius: 12,
-        marginBottom: 20,
+        marginBottom: 15,
         elevation: 4,
         color: '#C7C6CA'
     },
-
-
     textDetail: {
         paddingTop: 4,
         fontSize: 12,
         color: '#bfc0c3',
     },
-
     content: {
-        flex: 1,
+        marginTop: 20,
         width: '100%',
-        paddingHorizontal: 16,
-        paddingTop: 16,
-    },
-
+        alignItems: 'center',
+        marginBottom: 50,
+    }
 });
