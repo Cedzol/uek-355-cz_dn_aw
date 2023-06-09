@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
-import {Button, Checkbox, Provider, TextInput} from "react-native-paper";
+import {Button, Checkbox, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
 import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
@@ -24,10 +24,6 @@ export default function CreateReminder({ navigation , route}: Props){
 
     const repetitionList = [
         {
-            label: "Einmalig",
-            value: RepetitionType.Unique
-        },
-        {
             label : "Stündlich",
             value: RepetitionType.Hourly
         },
@@ -45,7 +41,7 @@ export default function CreateReminder({ navigation , route}: Props){
 
     const [details, setDetails] = useState('');
 
-    const [dropDownMode, setDropDownMode] = useState<RepetitionType>(RepetitionType.Daily)
+    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Daily)
 
     const [checked, setChecked] = React.useState(false);
 
@@ -161,8 +157,8 @@ export default function CreateReminder({ navigation , route}: Props){
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.checkbox}>
-                <Text>
+            <View style={[styles.checkbox, styles.center]}>
+                <Text style={{marginRight : "auto"}}>
                     <Checkbox.Item
                         status={checked ? 'checked' : 'unchecked'}
                         labelStyle={{color : '#C7C6CA',}}
@@ -204,10 +200,10 @@ export default function CreateReminder({ navigation , route}: Props){
                     <View style={{width : Dimensions.get('window').width / 1.2}}>
                         <DropDownPicker
                             open={showDropDown}
-                            value={dropDownMode}
+                            value={repetitionMode}
                             items={repetitionList}
                             setOpen={setShowDropDown}
-                            setValue={setDropDownMode}
+                            setValue={setRepetitionMode}
                             style={{
                                 backgroundColor : '#45464F',
                             }}
@@ -220,7 +216,14 @@ export default function CreateReminder({ navigation , route}: Props){
                                 fontSize : 16
                             }}
                         />
+
+                        {repetitionMode == RepetitionType.Weekly?
+                            <View>
+                                <Text>Hello</Text>
+                            </View>
+                            : null}
                     </View>
+
                 }
             </View>
         </View>
