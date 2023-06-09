@@ -2,12 +2,17 @@ import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native
 import React, {useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
-import {Button, Checkbox, TextInput} from "react-native-paper";
-import {DatePickerModal, TimePickerModal} from 'react-native-paper-dates'
-import {Time, TimeNumber} from "../../assets/models/Time";
+import IconB from "react-native-vector-icons/Entypo";
+import {Button, Checkbox, Provider, TextInput} from "react-native-paper";
+import {TimePickerModal} from 'react-native-paper-dates'
+import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import DatePicker from 'react-native-modern-datepicker';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from "moment/moment";
+import DropDownPicker from 'react-native-dropdown-picker';
+import {RepetitionType} from "../../assets/models/Enums";
+
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
@@ -17,11 +22,34 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CreateReminder'>;
 
 export default function CreateReminder({ navigation , route}: Props){
 
+    const repetitionList = [
+        {
+            label: "Einmalig",
+            value: RepetitionType.Unique
+        },
+        {
+            label : "Stündlich",
+            value: RepetitionType.Hourly
+        },
+        {
+            label : "Täglich",
+            value: RepetitionType.Daily
+        },
+        {
+            label: "Wöchentlich",
+            value: RepetitionType.Weekly
+        }
+    ]
+
     const [text, setText] = React.useState('');
 
     const [details, setDetails] = useState('');
 
+    const [dropDownMode, setDropDownMode] = useState<RepetitionType>(RepetitionType.Daily)
+
     const [checked, setChecked] = React.useState(false);
+
+    const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
     let currentTime = new Date();
 
@@ -42,14 +70,17 @@ export default function CreateReminder({ navigation , route}: Props){
         setTimePickerVisible(false)
    }
 
-   const [datePickerVisible, setDatePickerVisible] = useState<boolean>(true)
+   const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
+
+    const [uniqueDate, setUniqueDate] = useState<Date>(currentTime)
 
    function onDatePickerDismiss(){
-        setTimePickerVisible(false);
+        setDatePickerVisible(false);
    }
 
-   function onDatePickerConfirm(){
-        setTimePickerVisible(false);
+   function onDatePickerConfirm(date : Date){
+        setUniqueDate(date)
+        setDatePickerVisible(false);
    }
 
    function handleSubmit() {
@@ -83,6 +114,7 @@ export default function CreateReminder({ navigation , route}: Props){
                     theme={{
                         colors : {primary : '#B2C5FF'}
                     }}
+                    textColor={'#C7C6CA'}
                     outlineColor={"#B2C5FF"}
                 />
 
@@ -95,6 +127,7 @@ export default function CreateReminder({ navigation , route}: Props){
                     theme={{
                         colors : {primary : '#B2C5FF'}
                     }}
+                    textColor={'#C7C6CA'}
                     outlineColor={"#B2C5FF"}
                 />
             </View>
@@ -140,28 +173,54 @@ export default function CreateReminder({ navigation , route}: Props){
                 </Text>
             </View>
 
-            <View>
-                {!checked ?
+            <View style={styles.center}>
+                {!checked?
                     <View>
-                        <DatePicker
-                            options={{
-                                backgroundColor: '#090C08',
-                                textHeaderColor: '#FFA25B',
-                                textDefaultColor: '#F6E7C1',
-                                selectedTextColor: '#fff',
-                                mainColor: '#F4722B',
-                                textSecondaryColor: '#D6C7A1',
-                                borderColor: 'rgba(122, 146, 165, 0.1)',
-                            }}
-                            current="2020-07-13"
-                            selected="2020-07-23"
-                            mode="calendar"
-                            minuteInterval={30}
-                            style={{ borderRadius: 10 }}
+                        <DateTimePickerModal
+                            date={uniqueDate}
+                            isVisible={datePickerVisible}
+                            mode="date"
+                            onConfirm={onDatePickerConfirm}
+                            onCancel={onDatePickerDismiss}
                         />
+                        <View>
+                            <TouchableOpacity onPress={() => setDatePickerVisible(true)} style={styles.datePickerBox}>
+                                <Text style={{color : '#C7C6CA', fontSize : 20}}>Datum auswählen <IconB name="calendar" size={28} color="#DCE2F9"/></Text>
+                            <TextInput
+                                editable={false}
+                                style={[styles.textFields, {width: Dimensions.get('window').width / 1.2, marginTop : 20}]}
+                                value={(moment(uniqueDate)).format('DD/MM/YYYY') }
+                                mode={"outlined"}
+                                theme={{
+                                    colors : {primary : '#B2C5FF'}
+                                }}
+                                textColor={'#C7C6CA'}
+                                outlineColor={"#B2C5FF"}
+                            />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 :
-                    <View><Text>True</Text></View>
+                    <View style={{width : Dimensions.get('window').width / 1.2}}>
+                        <DropDownPicker
+                            open={showDropDown}
+                            value={dropDownMode}
+                            items={repetitionList}
+                            setOpen={setShowDropDown}
+                            setValue={setDropDownMode}
+                            style={{
+                                backgroundColor : '#45464F',
+                            }}
+
+                            listItemContainerStyle={{
+                                backgroundColor : '#45464F',
+                            }}
+                            textStyle={{
+                                color: '#C7C6CA',
+                                fontSize : 16
+                            }}
+                        />
+                    </View>
                 }
             </View>
         </View>
@@ -169,6 +228,15 @@ export default function CreateReminder({ navigation , route}: Props){
 }
 
 const styles = StyleSheet.create({
+    datePickerBox : {
+        marginTop : 15,
+        paddingTop : 15,
+        backgroundColor : '#45464F',
+        borderRadius : 15,
+        width : Dimensions.get('window').width / 1.1,
+        alignItems : "center"
+    },
+
     checkbox : {
         marginTop : 20
     },
