@@ -10,11 +10,11 @@ import TimeView from "../components/TimeView";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment/moment";
-import DropDownPicker from 'react-native-dropdown-picker';
 import {RepetitionType} from "../../assets/models/Enums";
 import WeekdaySelector from "../molecules/WeekdaySelector";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
+import DropDown from "react-native-paper-dropdown";
 
 const theme = {
     "colors": {
@@ -259,10 +259,11 @@ export default function CreateReminder({navigation, route}: Props) {
                                 themeVariant={"dark"}
                             />
                             <Card style={styles.card2}>
+                                <Card.Content style={styles.cardContent}>
+                                <Text style={styles.datePickerText}>Datum auswählen <IconB
+                                    name="calendar" size={28} color="#DCE2F9"/></Text>
                                 <TouchableOpacity onPress={() => setDatePickerVisible(true)}
                                                   style={styles.datePickerBox}>
-                                    <Text style={{color: '#C7C6CA', fontSize: 28}}>Datum auswählen <IconB
-                                        name="calendar" size={28} color="#DCE2F9"/></Text>
                                     <TextInput
                                         editable={false}
                                         style={[styles.textFields, {
@@ -273,35 +274,30 @@ export default function CreateReminder({navigation, route}: Props) {
                                         mode={"outlined"}
                                     />
                                 </TouchableOpacity>
+                                </Card.Content>
                             </Card>
                         </View>
                         :
-                        <View style={{width: Dimensions.get('window').width / 1.1,}}>
-                            <DropDownPicker
-                                open={showDropDown}
+                        <View style={{width: 'auto', alignSelf: 'flex-start', marginLeft: 15}}>
+                            <DropDown
+                                mode={"outlined"}
+                                visible={showDropDown}
+                                showDropDown={() => setShowDropDown(true)}
+                                onDismiss={() => setShowDropDown(false)}
                                 value={repetitionMode}
-                                items={repetitionList}
-                                setOpen={setShowDropDown}
                                 setValue={setRepetitionMode}
-                                style={{
-                                    backgroundColor: '#45464F',
-                                }}
-
-                                listItemContainerStyle={{
-                                    backgroundColor: '#45464F',
-                                }}
-                                textStyle={{
-                                    color: '#C7C6CA',
-                                    fontSize: 16
-                                }}
+                                list={repetitionList}
+                                dropDownItemTextStyle={{color: '#FFF'}}
+                                dropDownItemSelectedTextStyle={{color: '#FFF'}}
                             />
 
                             {repetitionMode === RepetitionType.Weekly && (
                                 <View style={{
+                                    position: "absolute",
                                     justifyContent: "center",
                                     flexDirection: "row",
-                                    gap: 20,
-                                    marginTop: 30,
+                                    gap: 16,
+                                    marginTop: 80,
                                     zIndex: -1
                                 }}>
                                     <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector
@@ -346,12 +342,12 @@ export default function CreateReminder({navigation, route}: Props) {
 const styles = StyleSheet.create({
     datePickerBox: {
         marginTop: 15,
-        paddingTop: 15,
-        borderRadius: 15,
-        width: Dimensions.get('window').width / 1.1,
-        alignItems: "center"
+        alignItems: "center",
     },
-
+    datePickerText: {
+        color: '#C7C6CA',
+        fontSize: 32
+    },
 
     repeatable: {
         color: '#C7C6CA',
