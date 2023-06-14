@@ -10,6 +10,7 @@ import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import RepetitionView from "../components/RepetitionView";
+import NotificationCentre from "../components/NotificationCentre";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -168,6 +169,7 @@ export default function MainPageList({navigation, route}: Props) {
                 <Button onPress={() => navigation.navigate('CreateReminder')}>
                     <Icon name="plus" size={24} color="#DCE2F9"/>
                 </Button>
+                <NotificationCentre></NotificationCentre>
             </View>
         </Provider>
 
