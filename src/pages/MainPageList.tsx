@@ -1,14 +1,14 @@
-import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View, Animated } from 'react-native';
-import { Button, Card, DefaultTheme, List, Provider } from 'react-native-paper';
-import { useCallback, useEffect, useState } from 'react';
-import { Reminder } from '../../assets/models/Reminder';
-import { RepetitionType } from '../../assets/models/Enums';
+import {Animated, Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Button, Card, DefaultTheme, Provider} from 'react-native-paper';
+import React, {useCallback, useState} from 'react';
+import {Reminder} from '../../assets/models/Reminder';
+import {RepetitionType} from '../../assets/models/Enums';
 import TimeView from '../components/TimeView';
-import RepetitionView from '../components/RepetitionView';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
+import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import React from 'react';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,17 +27,6 @@ const MD3Theme = {
     },
 };
 
-export default function MainPageList() {
-import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Button, List } from 'react-native-paper';
-import { Reminder } from "../../assets/models/Reminder";
-import { RepetitionType } from "../../assets/models/Enums";
-import TimeView from "../components/TimeView";
-import RepetitionView from "../components/RepetitionView";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useFonts } from 'expo-font';
-import React, {useState} from "react";
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
@@ -45,7 +34,7 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
 
-export default function MainPageList({ navigation , route}: Props) {
+export default function MainPageList({navigation, route}: Props) {
 
     useFonts({
         'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
@@ -147,12 +136,12 @@ export default function MainPageList({ navigation , route}: Props) {
     return (
         <Provider theme={MD3Theme}>
             <View style={styles.container} onLayout={onLayoutRootView}>
-                <Animated.View style={[styles.topBar, { backgroundColor: topBarBackgroundColor }]}>
+                <Animated.View style={[styles.topBar, {backgroundColor: topBarBackgroundColor}]}>
                     <Text style={styles.title}>RemindMe!</Text>
                 </Animated.View>
                 <ScrollView
-                    style={{ paddingTop: 30 }}
-                    onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
+                    style={{paddingTop: 30}}
+                    onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: false})}
                     scrollEventThrottle={16}
                 >
                     <View style={styles.content}>
@@ -160,42 +149,22 @@ export default function MainPageList({ navigation , route}: Props) {
                             <Card key={index} style={styles.card}>
                                 <Card.Content style={styles.cardContent}>
                                     <View style={styles.cardTitleContainer}>
-                                        <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
-                                        <TimeView reminder={reminder} style={styles.timeView} />
-                </View>
-                <ScrollView style={styles.content}>
-                    {reminders.map((reminder: Reminder, index) => (
-                        <List.Item
-                            key={index}
-                            title={reminder.title}
-                            titleStyle={{color: '#C7C6CA', fontSize : 20}}
-                            description={() => (
-                                <View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.textDetail}>{reminder.details}</Text>
-                                        <View style={{ marginLeft: 'auto' }}>
-                                            <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26}></TimeView>
-                                        </View>
-                                    </View>
-                                    <Text style={styles.cardDetail}>{reminder.details}</Text>
-                                    <View style={styles.repetitionView}>
-                                        <RepetitionView reminder={reminder} />
+                                        <Text style={[styles.cardTitle, {flex: 1}]}>{reminder.title}</Text>
+                                        <TimeView reminder={reminder} style={styles.timeView}/>
                                     </View>
                                 </Card.Content>
                             </Card>
                         ))}
                     </View>
                 </ScrollView>
-                <View style={styles.addButtonContainer}>
-                    <Icon name="plus" size={24} color="#DCE2F9" />
-                </View>
+
             </View>
             <View style={styles.addButtonContainer}>
                 <Button onPress={() => navigation.navigate('CreateReminder')}>
-                    <Icon name="plus" size={24} color="#DCE2F9" />
+                    <Icon name="plus" size={24} color="#DCE2F9"/>
                 </Button>
             </View>
-        </View>
+        </Provider>
 
     );
 }
