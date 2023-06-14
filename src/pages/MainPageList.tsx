@@ -169,7 +169,6 @@ export default function MainPageList({navigation, route}: Props) {
                 <Button onPress={() => navigation.navigate('CreateReminder')}>
                     <Icon name="plus" size={24} color="#DCE2F9"/>
                 </Button>
-                <NotificationCentre></NotificationCentre>
             </View>
         </Provider>
 

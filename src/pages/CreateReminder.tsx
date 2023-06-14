@@ -233,12 +233,12 @@ export default function CreateReminder({ navigation , route}: Props){
 
                         {repetitionMode === RepetitionType.Weekly && (
                             <View style={{ justifyContent: "center", flexDirection: "row", gap: 20, marginTop: 30, zIndex: -1 }}>
-                                <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector fontColor={weekdays.includes("1") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("1") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector fontColor={weekdays.includes("2") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("2") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"D"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector fontColor={weekdays.includes("3") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("3") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector fontColor={weekdays.includes("4") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("4") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"D"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector fontColor={weekdays.includes("5") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("5") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"F"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector fontColor={weekdays.includes("6") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("6") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"S"} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector fontColor={weekdays.includes("1") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("1") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"S"} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector fontColor={weekdays.includes("2") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("2") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector fontColor={weekdays.includes("3") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("3") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"D"} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector fontColor={weekdays.includes("4") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("4") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector fontColor={weekdays.includes("5") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("5") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"D"} /></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector fontColor={weekdays.includes("6") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("6") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"F"} /></TouchableOpacity>
                                 <TouchableOpacity onPress={() => handleWeekday("7")}><WeekdaySelector fontColor={weekdays.includes("7") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("7") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"S"} /></TouchableOpacity>
                             </View>
                         )}
