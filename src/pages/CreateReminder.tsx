@@ -14,6 +14,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {RepetitionType} from "../../assets/models/Enums";
 import WeekdaySelector from "../molecules/WeekdaySelector";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {v4 as uuidv4} from 'uuid';
+
 
 type RootStackParamList = {
     MainPageList: undefined;
@@ -124,7 +126,14 @@ export default function CreateReminder({ navigation , route}: Props){
            uniqueDate : uniqueDate,
            repeatFrequency: repetitionMode, //braucht es das?
            daysOfWeek : weekdays, //wenn das NULL ist dann sollte es repeat wekkly sein
+           //wenn wir ein nextRepeatsOnDate machen, muss das sich immer automatisch updaten nach einer notification -> brauchen wir nicht
        }
+
+       const identifiableReminderObject = JSON.stringify(identifiableReminder);
+
+       AsyncStorage.setItem(uuidv4, identifiableReminderObject);
+       alert("identifiableReminderObject" + identifiableReminderObject);
+       //AsyncStorage.setItem("abc", identifiableReminderObject);
 
        navigation.goBack();
    }
