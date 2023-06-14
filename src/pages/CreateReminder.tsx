@@ -58,25 +58,26 @@ export default function CreateReminder({ navigation , route}: Props){
 
     const [timePickerVisible, setTimePickerVisible] = useState(false);
 
-    const onTimePickerConfirm = React.useCallback(
-        ({ hours, minutes }: { hours: number; minutes: number }) => {
-            setTime(
-                moment().set("hour", hours).set("minutes", minutes)
-            );
-            setTimePickerVisible(false);
-        },
-        [setTimePickerVisible]
-    );
+    // const onTimePickerConfirm = React.useCallback(
+    //     ({ hours, minutes }: { hours: number; minutes: number }) => {
+    //         setTime(
+    //             //moment().set("hour", hours).set("minutes", minutes)
+    //             time
+    //         );
+    //         setTimePickerVisible(false);
+    //     },
+    //     [setTimePickerVisible]
+    // );
 
     function onTimePickerDismiss(){
         setTimePickerVisible(false)
     }
 
-   // function onTimePickerConfirm(time : TimeNumber){
-   //      setTime(time)
-   //     console.log(time)
-   //      setTimePickerVisible(false)
-   // }
+   function onTimePickerConfirm(time : TimeNumber){
+        setTime(time)
+       console.log(time)
+        setTimePickerVisible(false)
+   }
 
    const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
 
@@ -91,33 +92,7 @@ export default function CreateReminder({ navigation , route}: Props){
         setDatePickerVisible(false);
    }
 
-   function handleSubmit() {
-       // <TimePickerModal
-       //     visible={timePickerVisible}
-       //     onDismiss={onTimePickerDismiss}
-       //     onConfirm={onTimePickerConfirm}
-       //     hours={time.hours} // default: current hours
-       //     minutes={time.minutes} // default: current minutes
-       //     label="Select time" // optional, default 'Select time'
-       //     cancelLabel="Cancel" // optional, default: 'Cancel'
-       //     confirmLabel="Ok" // optional, default: 'Ok'
-       //     use24HourClock
-       //     animationType="fade" // optional, default is 'none'
-       //     locale={'de'} // optional, default is automatically detected by your system
-       // />
-        saveText(text);
-        saveDetails(details);
-        saveTime(time);
-        saveRepetiton(checked);
-        saveSpecificUniqueDate(uniqueDate);
-        //saveDaysOfWeek(); TODO: How should we do this? -> maybe just save the numbers in a number array and then when
-                            // reading we know what the numbers mean like which day is which number
-       //saveNextReminderExecution(setRepetitionMode().toS) TODO: How should we do this?
-
-       navigation.goBack();
-   }
-
-   const [weekdays, setWeekdays] = useState<string[]>([])
+    const [weekdays, setWeekdays] = useState<string[]>([])
 
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
@@ -131,75 +106,98 @@ export default function CreateReminder({ navigation , route}: Props){
         }
     }
 
-    const saveText = async (text: string) => {
-        try{
-            await AsyncStorage.setItem("text", text)
-            alert('Saved text' + text)
+   function handleSubmit() {
+        // saveText(text);
+        // saveDetails(details);
+        // saveTime(time);
+        // saveRepetiton(checked);
+        // saveSpecificUniqueDate(uniqueDate);
+        //saveDaysOfWeek(); TODO: How should we do this? -> maybe just save the numbers in a number array and then when
+                            // reading we know what the numbers mean like which day is which number
+       //saveNextReminderExecution(setRepetitionMode().toS) TODO: How should we do this?
 
-        }catch (e) {
-            alert('Failed to save text')
-        }
-    }
+       const identifiableReminder = { //hier kann man nachher eigentlich mit NULL arbeiten -> ?
+           text: text,
+           details: details,
+           time: time,
+           checked: checked,
+           uniqueDate : uniqueDate,
+           repeatFrequency: repetitionMode, //braucht es das?
+           daysOfWeek : weekdays, //wenn das NULL ist dann sollte es repeat wekkly sein
+       }
 
-    const saveDetails = async (details: string) => {
-        try{
-            await AsyncStorage.setItem("details", details)
-            alert('Saved details' + details)
-
-        }catch (e) {
-            alert('Failed to save details')
-        }
-    }
-
-    const saveTime = async (time: TimeNumber) => {
-        try{
-            await AsyncStorage.setItem("time", String(time))//TODO: maybe use JSON.stringify(value);
-            alert('Saved time' + time)
-
-        }catch (e) {
-            alert('Failed to save time')
-        }
-    }
-
-    const saveRepetiton  = async (repetition: boolean) => {
-        try{
-            await AsyncStorage.setItem("repetition", String(repetition))//TODO: maybe use JSON.stringify(value);
-            alert('Saved repetition' + repetition)
-
-        }catch (e) {
-            alert('Failed to save repetition')
-        }
-    }
-
-    const saveSpecificUniqueDate  = async (uniqueDate: Date) => {
-        try{
-            await AsyncStorage.setItem("specificUniqueDate", String(uniqueDate))//TODO: maybe use JSON.stringify(value);
-            alert('Saved unique date' +uniqueDate)
-
-        }catch (e) {
-            alert('Failed to save unique date')
-        }
-    }
-
-    const saveDaysOfWeek  = async (daysOfWeek: number[]) => {
-        try{
-            await AsyncStorage.setItem("daysOfWeek", String(daysOfWeek))//TODO: maybe use JSON.stringify(value);
-            alert('Saved days of week')
-
-        }catch (e) {
-            alert('Failed to save days of week')
-        }
-    }
-
-    const saveNextReminderExecution  = async (nextReminderExecution: Date) => {
-        try{
-            await AsyncStorage.setItem("nextReminderExecution", String(nextReminderExecution))//TODO: maybe use JSON.stringify(value);
-            alert('Saved next reminder execution')
-
-        }catch (e) {
-            alert('Failed to save next reminder execution')
-        }
-    }
+       navigation.goBack();
+   }
+    //
+    // const saveText = async (text: string) => {
+    //     try{
+    //         await AsyncStorage.setItem("text", text)
+    //         alert('Saved text' + text)
+    //
+    //     }catch (e) {
+    //         alert('Failed to save text')
+    //     }
+    // }
+    //
+    // const saveDetails = async (details: string) => {
+    //     try{
+    //         await AsyncStorage.setItem("details", details)
+    //         alert('Saved details' + details)
+    //
+    //     }catch (e) {
+    //         alert('Failed to save details')
+    //     }
+    // }
+    //
+    // const saveTime = async (time: TimeNumber) => {
+    //     try{
+    //         await AsyncStorage.setItem("time", JSON.stringify(time))//TODO: maybe use JSON.stringify(value);
+    //         alert('Saved time' + time.hours + time.minutes)
+    //
+    //     }catch (e) {
+    //         alert('Failed to save time')
+    //     }
+    // }
+    //
+    // const saveRepetiton  = async (repetition: boolean) => {
+    //     try{
+    //         await AsyncStorage.setItem("repetition", String(repetition))//TODO: maybe use JSON.stringify(value);
+    //         alert('Saved repetition' + repetition)
+    //
+    //     }catch (e) {
+    //         alert('Failed to save repetition')
+    //     }
+    // }
+    //
+    // const saveSpecificUniqueDate  = async (uniqueDate: Date) => {
+    //     try{
+    //         await AsyncStorage.setItem("specificUniqueDate", String(uniqueDate))//TODO: maybe use JSON.stringify(value);
+    //         alert('Saved unique date' +uniqueDate)
+    //
+    //     }catch (e) {
+    //         alert('Failed to save unique date')
+    //     }
+    // }
+    //
+    // const saveDaysOfWeek  = async (daysOfWeek: number[]) => {
+    //     try{
+    //         await AsyncStorage.setItem("daysOfWeek", String(daysOfWeek))//TODO: maybe use JSON.stringify(value);
+    //         alert('Saved days of week')
+    //
+    //     }catch (e) {
+    //         alert('Failed to save days of week')
+    //     }
+    // }
+    //
+    // const saveNextReminderExecution  = async (nextReminderExecution: Date) => {
+    //     try{
+    //         await AsyncStorage.setItem("nextReminderExecution", String(nextReminderExecution))//TODO: maybe use JSON.stringify(value);
+    //         alert('Saved next reminder execution')
+    //
+    //     }catch (e) {
+    //         alert('Failed to save next reminder execution')
+    //     }
+    // }
 
     return (
         <View style={styles.container}>
