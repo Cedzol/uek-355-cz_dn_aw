@@ -37,10 +37,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
 
 export default function MainPageList({navigation, route}: Props) {
 
-    // async() => await Font.loadAsync(useFonts({
-    //     'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
-    // }));
-
      async () =>
         await Font.loadAsync({
             'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),

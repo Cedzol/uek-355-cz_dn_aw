@@ -5,7 +5,7 @@ import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
 import {Button, Checkbox, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
-import {TimeNumber} from "../../assets/models/Time";
+import {Time, TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -13,6 +13,7 @@ import moment from "moment/moment";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {RepetitionType} from "../../assets/models/Enums";
 import WeekdaySelector from "../molecules/WeekdaySelector";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
     MainPageList: undefined;
@@ -81,7 +82,31 @@ export default function CreateReminder({ navigation , route}: Props){
    }
 
    function handleSubmit() {
-        navigation.goBack();
+        //Time time = hours
+       // <TimePickerModal
+       //     visible={timePickerVisible}
+       //     onDismiss={onTimePickerDismiss}
+       //     onConfirm={onTimePickerConfirm}
+       //     hours={time.hours} // default: current hours
+       //     minutes={time.minutes} // default: current minutes
+       //     label="Select time" // optional, default 'Select time'
+       //     cancelLabel="Cancel" // optional, default: 'Cancel'
+       //     confirmLabel="Ok" // optional, default: 'Ok'
+       //     use24HourClock
+       //     animationType="fade" // optional, default is 'none'
+       //     locale={'de'} // optional, default is automatically detected by your system
+       // />
+       Time time = TimePickerModal.hours + TimePickerModal.minutes
+        saveText(text);
+        saveDetails(details);
+        // @ts-ignore
+       saveTime(TimePickerModal);
+        saveRepetiton(checked);
+        saveSpecificUniqueDate(uniqueDate);
+        //saveDaysOfWeek(); TODO: How should we do this?
+       //saveNextReminderExecution(setRepetitionMode().toS) TODO: How should we do this?
+
+       navigation.goBack();
    }
 
    const [weekdays, setWeekdays] = useState<string[]>([])
@@ -97,6 +122,77 @@ export default function CreateReminder({ navigation , route}: Props){
             setWeekdays((prevWeekdays) => [...prevWeekdays, dayIndex]);
         }
     }
+
+    const saveText = async (text: string) => {
+        try{
+            await AsyncStorage.setItem("text", text)
+            alert('Saved text' + text)
+
+        }catch (e) {
+            alert('Failed to save text')
+        }
+    }
+
+    const saveDetails = async (details: string) => {
+        try{
+            await AsyncStorage.setItem("details", details)
+            alert('Saved details' + details)
+
+        }catch (e) {
+            alert('Failed to save details')
+        }
+    }
+
+    const saveTime = async (time: React.MemoExoticComponent<typeof TimePickerModal>) => {
+        try{
+            await AsyncStorage.setItem("time", String(time))//TODO: maybe use JSON.stringify(value);
+            alert('Saved time' + time)
+
+        }catch (e) {
+            alert('Failed to save time')
+        }
+    }
+
+    const saveRepetiton  = async (repetition: boolean) => {
+        try{
+            await AsyncStorage.setItem("repetition", String(repetition))//TODO: maybe use JSON.stringify(value);
+            alert('Saved repetition' + repetition)
+
+        }catch (e) {
+            alert('Failed to save repetition')
+        }
+    }
+
+    const saveSpecificUniqueDate  = async (uniqueDate: Date) => {
+        try{
+            await AsyncStorage.setItem("specificUniqueDate", String(uniqueDate))//TODO: maybe use JSON.stringify(value);
+            alert('Saved unique date' +uniqueDate)
+
+        }catch (e) {
+            alert('Failed to save unique date')
+        }
+    }
+
+    const saveDaysOfWeek  = async (daysOfWeek: number[]) => {
+        try{
+            await AsyncStorage.setItem("daysOfWeek", String(daysOfWeek))//TODO: maybe use JSON.stringify(value);
+            alert('Saved days of week')
+
+        }catch (e) {
+            alert('Failed to save days of week')
+        }
+    }
+
+    const saveNextReminderExecution  = async (nextReminderExecution: Date) => {
+        try{
+            await AsyncStorage.setItem("nextReminderExecution", String(nextReminderExecution))//TODO: maybe use JSON.stringify(value);
+            alert('Saved next reminder execution')
+
+        }catch (e) {
+            alert('Failed to save next reminder execution')
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.topBar}>
@@ -153,7 +249,7 @@ export default function CreateReminder({ navigation , route}: Props){
                 confirmLabel="Ok" // optional, default: 'Ok'
                 use24HourClock
                 animationType="fade" // optional, default is 'none'
-                locale={'de'} // optional, default is automically detected by your system
+                locale={'de'} // optional, default is automatically detected by your system
             />
             <View style={styles.center}>
                 <TouchableOpacity style={styles.timeBox} onPress={() => setTimePickerVisible(true)}>
@@ -243,7 +339,6 @@ export default function CreateReminder({ navigation , route}: Props){
                             </View>
                         )}
                     </View>
-
                 }
             </View>
         </View>
