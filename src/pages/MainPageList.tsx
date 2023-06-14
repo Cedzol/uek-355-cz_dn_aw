@@ -1,5 +1,5 @@
 import {Animated, Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
-import {Button, Card, DefaultTheme, Provider} from 'react-native-paper';
+import {Button, Card, DefaultTheme, Provider, TouchableRipple} from 'react-native-paper';
 import React, {useCallback, useState} from 'react';
 import {Reminder} from '../../assets/models/Reminder';
 import {RepetitionType} from '../../assets/models/Enums';
@@ -141,8 +141,8 @@ export default function MainPageList({navigation, route}: Props) {
                     <Text style={styles.title}>RemindMe!</Text>
                 </Animated.View>
                 <ScrollView
-                    style={{ paddingTop: 30 }}
-                    onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
+                    style={{paddingTop: 30}}
+                    onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: false})}
                     scrollEventThrottle={16}
                 >
                     <View style={styles.content}>
@@ -150,12 +150,13 @@ export default function MainPageList({navigation, route}: Props) {
                             <Card key={index} style={styles.card}>
                                 <Card.Content style={styles.cardContent}>
                                     <View style={styles.cardTitleContainer}>
-                                        <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
-                                        <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26}></TimeView>
+                                        <Text style={[styles.cardTitle, {flex: 1}]}>{reminder.title}</Text>
+                                        <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes}
+                                                  fontSize={26}></TimeView>
                                     </View>
                                     <Text style={styles.cardDetail}>{reminder.details}</Text>
                                     <View style={styles.repetitionView}>
-                                        <RepetitionView reminder={reminder} />
+                                        <RepetitionView reminder={reminder}/>
                                     </View>
                                 </Card.Content>
                             </Card>
@@ -165,9 +166,11 @@ export default function MainPageList({navigation, route}: Props) {
 
             </View>
             <View style={styles.addButtonContainer}>
-                <Button onPress={() => navigation.navigate('CreateReminder')}>
-                    <Icon name="plus" size={24} color="#DCE2F9"/>
-                </Button>
+                <TouchableRipple onPress={() => navigation.navigate('CreateReminder')} rippleColor="rgba(0, 0, 0, .32)">
+                    <Button>
+                        <Icon name="plus" size={24} color="#DCE2F9"/>
+                    </Button>
+                </TouchableRipple>
             </View>
         </Provider>
 

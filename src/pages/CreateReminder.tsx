@@ -3,7 +3,7 @@ import React, {useCallback, useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
-import {Button, Card, Checkbox, DefaultTheme, Provider, TextInput} from "react-native-paper";
+import {Button, Card, Checkbox, Provider, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
 import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
@@ -16,19 +16,50 @@ import WeekdaySelector from "../molecules/WeekdaySelector";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 
-const MD3Theme = {
-    ...DefaultTheme,
-    colors: {
-        ...DefaultTheme.colors,
-        primary: '#DCE2F9',
-        background: '#1D1B20',
-        text: '#C7C6CA',
-        placeholder: '#BFC0C3',
-        accent: '#404659',
-        error: '#F44336',
-        disabled: '#9E9E9E',
-    },
-};
+const theme = {
+    "colors": {
+        "primary": "rgb(176, 198, 255)",
+        "onPrimary": "rgb(0, 45, 111)",
+        "primaryContainer": "rgb(25, 67, 143)",
+        "onPrimaryContainer": "rgb(217, 226, 255)",
+        "secondary": "rgb(192, 198, 220)",
+        "onSecondary": "rgb(41, 48, 66)",
+        "secondaryContainer": "rgb(64, 70, 89)",
+        "onSecondaryContainer": "rgb(220, 226, 249)",
+        "tertiary": "rgb(224, 187, 221)",
+        "onTertiary": "rgb(65, 39, 66)",
+        "tertiaryContainer": "rgb(89, 61, 90)",
+        "onTertiaryContainer": "rgb(253, 215, 250)",
+        "error": "rgb(255, 180, 171)",
+        "onError": "rgb(105, 0, 5)",
+        "errorContainer": "rgb(147, 0, 10)",
+        "onErrorContainer": "rgb(255, 180, 171)",
+        "background": "rgb(27, 27, 31)",
+        "onBackground": "rgb(227, 226, 230)",
+        "surface": "rgb(27, 27, 31)",
+        "onSurface": "rgb(227, 226, 230)",
+        "surfaceVariant": "rgb(68, 70, 79)",
+        "onSurfaceVariant": "rgb(197, 198, 208)",
+        "outline": "rgb(143, 144, 153)",
+        "outlineVariant": "rgb(68, 70, 79)",
+        "shadow": "rgb(0, 0, 0)",
+        "scrim": "rgb(0, 0, 0)",
+        "inverseSurface": "rgb(227, 226, 230)",
+        "inverseOnSurface": "rgb(48, 48, 52)",
+        "inversePrimary": "rgb(55, 92, 168)",
+        "elevation": {
+            "level0": "transparent",
+            "level1": "rgb(34, 36, 42)",
+            "level2": "rgb(39, 41, 49)",
+            "level3": "rgb(43, 46, 56)",
+            "level4": "rgb(45, 48, 58)",
+            "level5": "rgb(48, 51, 62)"
+        },
+        "surfaceDisabled": "rgba(227, 226, 230, 0.12)",
+        "onSurfaceDisabled": "rgba(227, 226, 230, 0.38)",
+        "backdrop": "rgba(46, 48, 56, 0.4)"
+    }
+}
 
 
 type RootStackParamList = {
@@ -134,16 +165,16 @@ export default function CreateReminder({navigation, route}: Props) {
     });
 
     return (
-        <Provider theme={MD3Theme}>
+        <Provider theme={theme}>
             <View style={styles.container} onLayout={onLayoutRootView}>
                 <Animated.View style={[styles.topBar, {backgroundColor: topBarBackgroundColor}]}>
-                    <View style={{marginLeft: 28, flexDirection: 'row'}}>
+                    <View style={{marginLeft: 10, flexDirection: 'row'}}>
                         <View>
                             <Button onPress={() => navigation.goBack()}>
                                 <Icon name="arrow-back-sharp" size={28} color="#DCE2F9"/>
                             </Button>
                         </View>
-                        <View style={{marginLeft: 'auto', marginRight: 28}}>
+                        <View style={{marginLeft: 'auto', marginRight: 10}}>
                             <Button onPress={handleSubmit}>
                                 <IconA name={"check"} size={28} color="#DCE2F9"></IconA>
                             </Button>
@@ -158,11 +189,6 @@ export default function CreateReminder({navigation, route}: Props) {
                         value={text}
                         mode={"outlined"}
                         label={"Titel"}
-                        theme={{
-                            colors: {primary: '#B2C5FF'}
-                        }}
-                        textColor={'#C7C6CA'}
-                        outlineColor={"#8F909A"}
                     />
 
                     <TextInput
@@ -171,11 +197,6 @@ export default function CreateReminder({navigation, route}: Props) {
                         value={details}
                         mode={"outlined"}
                         label={"Notizen"}
-                        theme={{
-                            colors: {primary: '#B2C5FF'}
-                        }}
-                        textColor={'#C7C6CA'}
-                        outlineColor={"#8F909A"}
                     />
                 </View>
 
@@ -191,32 +212,29 @@ export default function CreateReminder({navigation, route}: Props) {
                     use24HourClock
                     animationType="fade" // optional, default is 'none'
                     locale={'de'} // optional, default is automatically detected by your system
-                    style={styles.timePickerModal}
-                    containerStyle={styles.timePickerContainer}
-                    labelStyle={styles.timePickerLabel}
-                    buttonTextStyle={styles.timePickerButtonLabel}
-                    buttonTextSize={styles.timePickerButtonText}
                 />
+
 
                 <View style={styles.content}>
                     <Card style={styles.card}>
                         <TouchableOpacity style={styles.timeBox} onPress={() => setTimePickerVisible(true)}>
-                            <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10}}>
-                                <Text style={styles.timeBoxLabel}> Uhrzeit</Text>
-                                <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
-                                    <TimeView hours={time?.hours} minutes={time?.minutes} fontSize={45}></TimeView>
+                            <Card.Content style={styles.cardContent}>
+                                <Text style={styles.timeBoxLabel}>Zeit</Text>
+                                <View style={{marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto'}}>
+                                    <TimeView hours={time?.hours} minutes={time?.minutes} fontSize={55}></TimeView>
                                     <Text>
                                         <Text style={styles.labels}>Stunden</Text>
                                         <View style={styles.labelMargin}></View>
                                         <Text style={styles.labels}>Minuten</Text>
                                     </Text>
                                 </View>
-                            </View>
+                            </Card.Content>
                         </TouchableOpacity>
                     </Card>
                 </View>
 
-                <View style={[styles.checkbox, styles.center]}>
+
+                <View style={[styles.center]}>
                     <Text style={{marginRight: "auto"}}>
                         <Checkbox.Item
                             status={checked ? 'checked' : 'unchecked'}
@@ -238,11 +256,12 @@ export default function CreateReminder({navigation, route}: Props) {
                                 mode="date"
                                 onConfirm={onDatePickerConfirm}
                                 onCancel={onDatePickerDismiss}
+                                themeVariant={"dark"}
                             />
-                            <View>
+                            <Card style={styles.card2}>
                                 <TouchableOpacity onPress={() => setDatePickerVisible(true)}
                                                   style={styles.datePickerBox}>
-                                    <Text style={{color: '#C7C6CA', fontSize: 20}}>Datum auswählen <IconB
+                                    <Text style={{color: '#C7C6CA', fontSize: 28}}>Datum auswählen <IconB
                                         name="calendar" size={28} color="#DCE2F9"/></Text>
                                     <TextInput
                                         editable={false}
@@ -252,17 +271,12 @@ export default function CreateReminder({navigation, route}: Props) {
                                         }]}
                                         value={(moment(uniqueDate)).format('DD/MM/YYYY')}
                                         mode={"outlined"}
-                                        theme={{
-                                            colors: {primary: '#B2C5FF'}
-                                        }}
-                                        textColor={'#C7C6CA'}
-                                        outlineColor={"#8F909A"}
                                     />
                                 </TouchableOpacity>
-                            </View>
+                            </Card>
                         </View>
                         :
-                        <View style={{width: Dimensions.get('window').width / 1.2,}}>
+                        <View style={{width: Dimensions.get('window').width / 1.1,}}>
                             <DropDownPicker
                                 open={showDropDown}
                                 value={repetitionMode}
@@ -333,15 +347,11 @@ const styles = StyleSheet.create({
     datePickerBox: {
         marginTop: 15,
         paddingTop: 15,
-        backgroundColor: '#45464F',
         borderRadius: 15,
         width: Dimensions.get('window').width / 1.1,
         alignItems: "center"
     },
 
-    checkbox: {
-        marginTop: 20
-    },
 
     repeatable: {
         color: '#C7C6CA',
@@ -373,7 +383,7 @@ const styles = StyleSheet.create({
     textFields: {
         width: Dimensions.get('window').width / 1.1,
         backgroundColor: '#1D1B20',
-        marginBottom: 30
+        marginBottom: 25
     },
 
     center: {
@@ -393,16 +403,18 @@ const styles = StyleSheet.create({
     },
 
     timeBox: {
-        backgroundColor: '#45464F',
         width: Dimensions.get('window').width / 1.1,
         height: 100,
         borderRadius: 15
     },
 
     timeBoxLabel: {
+        position: 'absolute',
         color: '#C7C6CA',
+        fontWeight: 'bold',
         fontSize: 20,
-        marginTop: 15
+        marginLeft: 25,
+        marginTop: 25,
     },
 
     inlineTime: {
@@ -430,20 +442,18 @@ const styles = StyleSheet.create({
     timePickerContainer: {
         backgroundColor: '#25232A',
     },
-    timePickerLabel: {
-        color: '#C7C6CA',
-        fontSize: 16,
-    },
-    timePickerButtonLabel: {
-        color: '#DCE2F9',
-    },
-    timePickerButtonText: {
-        fontSize: 16,
-    },
     card: {
         width: Dimensions.get('window').width / 1.1,
+        height: 150,
         backgroundColor: '#25232A',
         marginBottom: 15,
+        elevation: 4,
+    },
+    card2: {
+        marginTop: 10,
+        width: Dimensions.get('window').width / 1.1,
+        height: 170,
+        backgroundColor: '#25232A',
         elevation: 4,
     },
     cardTitle: {
@@ -452,6 +462,7 @@ const styles = StyleSheet.create({
     },
     cardContent: {
         flexDirection: 'column',
+        height: 120
     },
     cardTitleContainer: {
         flexDirection: 'row',

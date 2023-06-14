@@ -26,7 +26,7 @@ export default function App() {
 
     return (
       <NavigationContainer>
-          <Stack.Navigator initialRouteName={"MainPageList"} screenOptions={{headerShown : false, animation: "slide_from_bottom", presentation: "modal"}}>
+          <Stack.Navigator initialRouteName={"MainPageList"} screenOptions={{headerShown : false, animation: "fade_from_bottom", presentation: "modal"}}>
               <Stack.Screen
                   name="MainPageList"
                   component={MainPageList}
