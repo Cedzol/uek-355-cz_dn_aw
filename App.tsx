@@ -1,21 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import * as NavigationBar from 'expo-navigation-bar';
 import { StyleSheet, Text, View, StatusBar as ReactStatusBar } from 'react-native';
-import MainPageList from './src/pages/MainPageList';
-import { NavigationContainer } from '@react-navigation/native';
+import MainPageList from "./src/pages/MainPageList";
+import CreateReminder from "./src/pages/CreateReminder"
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 
 NavigationBar.setPositionAsync('absolute');
 NavigationBar.setBackgroundColorAsync('#ffffff01');
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <View style={styles.container}>
-        <MainPageList />
-        <StatusBar translucent style="light" backgroundColor="transparent" />
+    const Stack = createNativeStackNavigator();
+
+    return (
+      <NavigationContainer>
+          <Stack.Navigator initialRouteName={"MainPageList"} screenOptions={{headerShown : false}}>
+              <Stack.Screen
+                  name="MainPageList"
+                  component={MainPageList}
+              />
+
+              <Stack.Screen
+                  name={"CreateReminder"}
+                  component={CreateReminder}
+                  />
+          </Stack.Navigator>
+          <StatusBar translucent style="light" backgroundColor="transparent" />
         <ReactStatusBar translucent barStyle="light-content" backgroundColor="transparent" />
-      </View>
-    </NavigationContainer>
+      </NavigationContainer>
   );
 }
 
