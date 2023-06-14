@@ -1,67 +1,81 @@
-import {StyleSheet, Text, View} from "react-native";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import React from "react";
-import {RepetitionType} from "../../assets/models/Enums";
-import {Reminder} from "../../assets/models/Reminder";
-import moment from "moment";
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Chip } from 'react-native-paper';
+import { RepetitionType } from '../../assets/models/Enums';
+import { Reminder } from '../../assets/models/Reminder';
+import moment from 'moment';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
-export default function RepetitionView(props : any) {
+SplashScreen.preventAutoHideAsync();
 
-    const reminder : Reminder = props.reminder;
+export default function RepetitionView(props: any) {
+    const reminder: Reminder = props.reminder;
 
-    const daysOfWeek : string[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    const daysOfWeek: string[] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
-    let dayString : string [] = []
+    let dayString: string[] = [];
 
     if (reminder.repetition == RepetitionType.Weekly) {
         for (let d of reminder.daysOfWeek!) {
-            dayString.push(" " + daysOfWeek[d])
+            dayString.push(' ' + daysOfWeek[d]);
         }
     }
 
+    const [fontsLoaded] = Font.useFonts({
+        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
+    });
+
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
+
+    if (!fontsLoaded) {
+        return null;
+    }
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.images}>
-                {reminder.repetition == RepetitionType.Unique ?
-                    <Icon name="repeat-once" size={25} color="#C7C6CA" />
-                :
-                    <Icon name="repeat" size={25} color="#C7C6CA" />
-                }
-                <View>
-                    {reminder.repetition == RepetitionType.Unique ?
-                    <Text style={styles.text}>{ reminder.repetition + ", " + (moment(reminder.specificUniqueDate)).format('DD.MM.YYYY') }</Text> : null}
+        <View onLayout={onLayoutRootView}>
+            <Chip
+                icon={reminder.repetition === RepetitionType.Unique ? 'numeric-1' : 'repeat'}
+                mode='outlined'
+                style={styles.chip}
+            >
+                {reminder.repetition == RepetitionType.Unique ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>
+                        {reminder.repetition + ', ' + moment(reminder.specificUniqueDate).format('DD.MM.YYYY')}
+                    </Text>
+                ) : null}
 
-                    {reminder.repetition == RepetitionType.Hourly ?
-                        <Text style={styles.text}>{ reminder.repetition }</Text> : null}
+                {reminder.repetition == RepetitionType.Hourly ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
+                ) : null}
 
-                    {reminder.repetition == RepetitionType.Daily ?
-                        <Text style={styles.text}>{ reminder.repetition }</Text> : null}
+                {reminder.repetition == RepetitionType.Daily ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
+                ) : null}
 
-                    {reminder.repetition == RepetitionType.Weekly ?
-                        <Text style={styles.text}>{ reminder.repetition + "," + dayString}</Text> : null}
+                {reminder.repetition == RepetitionType.Weekly ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>
+                        {reminder.repetition + ',' + dayString}
+                    </Text>
+                ) : null}
 
-                </View>
-            </Text>
+            </Chip>
         </View>
-    )
+    );
+
 }
 
 const styles = StyleSheet.create({
-    container : {
-        borderStyle: "solid",
-        borderRadius: 5,
-        borderColor: '#bdbfca',
-        borderWidth : 1,
-        height: 40,
-        justifyContent : "center",
+    chip: {
+        alignSelf: 'flex-start',
     },
-
-    images : {
-        marginLeft : 10,
-    },
-
-    text : {
-        color: '#bfc0c3',
-        fontSize : 14,
+    text: {
+        fontFamily: 'ProductSans-Regular',
+        color: '#B2C5FF',
+        fontSize: 14,
     }
 });

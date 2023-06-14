@@ -1,14 +1,33 @@
-import { Appearance, Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Button, List } from 'react-native-paper';
-import { Reminder } from "../../assets/models/Reminder";
-import { RepetitionType } from "../../assets/models/Enums";
-import TimeView from "../components/TimeView";
-import RepetitionView from "../components/RepetitionView";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useFonts } from 'expo-font';
-import React, {useState} from "react";
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import {Animated, Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Button, Card, DefaultTheme, Provider} from 'react-native-paper';
+import React, {useCallback, useState} from 'react';
+import {Reminder} from '../../assets/models/Reminder';
+import {RepetitionType} from '../../assets/models/Enums';
+import TimeView from '../components/TimeView';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
+import {useFonts} from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import RepetitionView from "../components/RepetitionView";
+
+SplashScreen.preventAutoHideAsync();
+
+const MD3Theme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: '#DCE2F9',
+        background: '#1D1B20',
+        surface: '#25232A',
+        text: '#C7C6CA',
+        placeholder: '#BFC0C3',
+        accent: '#404659',
+        error: '#F44336',
+        disabled: '#9E9E9E',
+    },
+};
+
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
@@ -16,7 +35,7 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
 
-export default function MainPageList({ navigation , route}: Props) {
+export default function MainPageList({navigation, route}: Props) {
 
     // async() => await Font.loadAsync(useFonts({
     //     'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
@@ -28,149 +47,172 @@ export default function MainPageList({ navigation , route}: Props) {
         });
 
     let r1: Reminder = {
-        title: "Badge",
-        details: "Badge nicht vergessen",
+        title: 'Badge',
+        details: 'Badge nicht vergessen',
         repetition: RepetitionType.Daily,
         time: {
             hours: '13',
-            minutes: '00'
+            minutes: '00',
         },
-        nextReminderExecution : new Date("2023-06-10 13:00")
-    }
+        nextReminderExecution: new Date('2023-06-10 13:00'),
+    };
 
     let r2: Reminder = {
-        title: "pause",
-        details: "10 uhr pause",
+        title: 'pause',
+        details: '10 uhr pause',
         repetition: RepetitionType.Weekly,
         daysOfWeek: [2, 3, 4],
         time: {
             hours: '10',
-            minutes: '00'
+            minutes: '00',
         },
-        nextReminderExecution : new Date("2023-06-14 10:00")
-    }
+        nextReminderExecution: new Date('2023-06-14 10:00'),
+    };
 
     let r3: Reminder = {
-        title: "Saufen",
-        details: "Wochenende, saufen!",
+        title: 'Saufen',
+        details: 'Wochenende, saufen!',
         repetition: RepetitionType.Unique,
         time: {
             hours: '10',
-            minutes: '00'
+            minutes: '00',
         },
-        specificUniqueDate: new Date("2023-06-12"),
-        nextReminderExecution : new Date("2023-06-12 10:00")
-    }
+        specificUniqueDate: new Date('2023-06-12'),
+        nextReminderExecution: new Date('2023-06-12 10:00'),
+    };
 
     let r4: Reminder = {
-        title: "Saufen",
-        details: "Wochenende, saufen!",
+        title: 'Saufen',
+        details: 'Wochenende, saufen!',
         repetition: RepetitionType.Unique,
         time: {
             hours: '10',
-            minutes: '00'
+            minutes: '00',
         },
-        specificUniqueDate: new Date("2023-06-13"),
-        nextReminderExecution : new Date("2023-06-13 10:00")
-    }
+        specificUniqueDate: new Date('2023-06-13'),
+        nextReminderExecution: new Date('2023-06-13 10:00'),
+    };
 
     let r5: Reminder = {
-        title: "Saufen",
-        details: "Wochenende, saufen!",
+        title: 'Saufen',
+        details: 'Wochenende, saufen!',
         repetition: RepetitionType.Unique,
         time: {
             hours: '10',
-            minutes: '00'
+            minutes: '00',
         },
-        specificUniqueDate: new Date("2023-06-14"),
-        nextReminderExecution : new Date("2023-06-14 10:00")
-    }
+        specificUniqueDate: new Date('2023-06-14'),
+        nextReminderExecution: new Date('2023-06-14 10:00'),
+    };
 
-    let r6 : Reminder = {
-        title: "Atmen",
-        details: "Luft ist wichtig",
+    let r6: Reminder = {
+        title: 'Atmen',
+        details: 'Luft ist wichtig',
         repetition: RepetitionType.Hourly,
         time: {
             hours: '10',
-            minutes: '05'
+            minutes: '05',
         },
-        nextReminderExecution : new Date("2023-06-09 9:05")
+        nextReminderExecution: new Date('2023-06-09 9:05'),
+    };
+
+    const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r6]);
+
+    const [fontsLoaded] = Font.useFonts({
+        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
+    });
+
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
+
+    if (!fontsLoaded) {
+        return null;
     }
 
-    const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r6])
+    const scrollY = new Animated.Value(0);
+    const topBarBackgroundColor = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['#1D1B20', '#2F2C35'],
+        extrapolate: 'clamp',
+    });
 
     return (
-        <View style={styles.container}>
-            <View>
-                <View style={styles.topBar}>
+        <Provider theme={MD3Theme}>
+            <View style={styles.container} onLayout={onLayoutRootView}>
+                <Animated.View style={[styles.topBar, {backgroundColor: topBarBackgroundColor}]}>
                     <Text style={styles.title}>RemindMe!</Text>
-                </View>
-                <ScrollView style={styles.content}>
-                    {reminders.map((reminder: Reminder, index) => (
-                        <List.Item
-                            key={index}
-                            title={reminder.title}
-                            titleStyle={{color: '#C7C6CA', fontSize : 20}}
-                            description={() => (
-                                <View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={styles.textDetail}>{reminder.details}</Text>
-                                        <View style={{ marginLeft: 'auto' }}>
-                                            <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26}></TimeView>
-                                        </View>
+                </Animated.View>
+                <ScrollView
+                    style={{ paddingTop: 30 }}
+                    onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
+                    scrollEventThrottle={16}
+                >
+                    <View style={styles.content}>
+                        {reminders.map((reminder: Reminder, index) => (
+                            <Card key={index} style={styles.card}>
+                                <Card.Content style={styles.cardContent}>
+                                    <View style={styles.cardTitleContainer}>
+                                        <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
+                                        <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26}></TimeView>
                                     </View>
+                                    <Text style={styles.cardDetail}>{reminder.details}</Text>
                                     <View style={styles.repetitionView}>
-                                        <RepetitionView reminder={reminder}></RepetitionView>
+                                        <RepetitionView reminder={reminder} />
                                     </View>
-
-                                </View>
-                            )}
-                            style={styles.listItem}
-                        />
-                    )
-                    )}
+                                </Card.Content>
+                            </Card>
+                        ))}
+                    </View>
                 </ScrollView>
+
             </View>
             <View style={styles.addButtonContainer}>
                 <Button onPress={() => navigation.navigate('CreateReminder')}>
-                    <Icon name="plus" size={24} color="#DCE2F9" />
+                    <Icon name="plus" size={24} color="#DCE2F9"/>
                 </Button>
             </View>
-        </View>
+        </Provider>
 
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#1D1B20',
         width: '100%',
         flex: 1,
-        backgroundColor: '#1D1B20',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#C7C6CA'
     },
-
-    repetitionView : {
-        paddingTop : 15
+    repetitionView: {
+        flex: 1,
+        paddingTop: 15,
     },
-
+    timeView: {
+        alignSelf: 'flex-end',
+    },
     topBar: {
-        height: 100,
+        width: Dimensions.get('window').width,
+        paddingTop: 30,
+        marginTop: 0,
+        height: 90,
         borderBottomWidth: 1,
-        borderBottomColor: '#999999',
+        borderBottomColor: '#3c3d45',
         justifyContent: 'center',
         alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        zIndex: 1,
     },
-
     title: {
-        paddingTop: 20,
+        paddingTop: 0,
         fontFamily: 'ProductSans-Regular',
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 24,
         color: 'white',
     },
-
     addButtonContainer: {
         position: 'absolute',
         bottom: 16,
@@ -181,34 +223,40 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 4, // Add shadow if desired
+        elevation: 6,
     },
-
-    listItem: {
-        width: Dimensions.get('window').width / 1.15,
-        height: 155,
-        borderStyle: "solid",
-        backgroundColor: "#25232A",
-        borderColor: "#3c3d45",
-        borderWidth: 1,
-        borderRadius: 12,
-        marginBottom: 20,
+    card: {
+        width: Dimensions.get('window').width / 1.1,
+        backgroundColor: '#25232A',
+        marginBottom: 15,
         elevation: 4,
-        color: '#C7C6CA'
     },
-
-
+    cardTitle: {
+        color: '#C7C6CA',
+        fontSize: 20,
+    },
+    cardContent: {
+        flexDirection: 'column',
+    },
+    cardTitleContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    cardDetail: {
+        color: '#bfc0c3',
+        fontSize: 12,
+        paddingTop: 4,
+    },
     textDetail: {
-        paddingTop : 4,
+        paddingTop: 4,
         fontSize: 12,
         color: '#bfc0c3',
     },
-
     content: {
-        flex: 1,
+        marginTop: 70,
         width: '100%',
-        paddingHorizontal: 16,
-        paddingTop: 16,
-      },
-
+        alignItems: 'center',
+        marginBottom: 50,
+    },
 });
