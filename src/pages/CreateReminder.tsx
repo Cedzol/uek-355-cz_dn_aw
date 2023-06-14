@@ -119,10 +119,10 @@ export default function CreateReminder({ navigation , route}: Props){
        //saveNextReminderExecution(setRepetitionMode().toS) TODO: How should we do this?
 
        const identifiableReminder = { //hier kann man nachher eigentlich mit NULL arbeiten -> ?
-           text: text,
-           details: details,
-           time: time,
-           checked: checked,
+           text : text,
+           details : details,
+           time : time,
+           repeating : checked,
            uniqueDate : uniqueDate,
            repeatFrequency: repetitionMode, //braucht es das?
            daysOfWeek : weekdays, //wenn das NULL ist dann sollte es repeat wekkly sein
@@ -131,10 +131,8 @@ export default function CreateReminder({ navigation , route}: Props){
 
        const identifiableReminderObject = JSON.stringify(identifiableReminder);
 
-       AsyncStorage.setItem(uuidv4, identifiableReminderObject);
+       AsyncStorage.setItem(uuidv4.toString(), identifiableReminderObject); //TODO: Delete this message: has to be .toString() otherwise there is a Malformed calls from JS error
        alert("identifiableReminderObject" + identifiableReminderObject);
-       //AsyncStorage.setItem("abc", identifiableReminderObject);
-
        navigation.goBack();
    }
     //
