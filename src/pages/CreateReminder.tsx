@@ -58,15 +58,25 @@ export default function CreateReminder({ navigation , route}: Props){
 
     const [timePickerVisible, setTimePickerVisible] = useState(false);
 
+    const onTimePickerConfirm = React.useCallback(
+        ({ hours, minutes }: { hours: number; minutes: number }) => {
+            setTime(
+                moment().set("hour", hours).set("minutes", minutes)
+            );
+            setTimePickerVisible(false);
+        },
+        [setTimePickerVisible]
+    );
+
     function onTimePickerDismiss(){
         setTimePickerVisible(false)
     }
 
-   function onTimePickerConfirm(time : TimeNumber){
-        setTime(time)
-       console.log(time)
-        setTimePickerVisible(false)
-   }
+   // function onTimePickerConfirm(time : TimeNumber){
+   //      setTime(time)
+   //     console.log(time)
+   //      setTimePickerVisible(false)
+   // }
 
    const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
 
@@ -82,7 +92,6 @@ export default function CreateReminder({ navigation , route}: Props){
    }
 
    function handleSubmit() {
-        //Time time = hours
        // <TimePickerModal
        //     visible={timePickerVisible}
        //     onDismiss={onTimePickerDismiss}
@@ -96,14 +105,13 @@ export default function CreateReminder({ navigation , route}: Props){
        //     animationType="fade" // optional, default is 'none'
        //     locale={'de'} // optional, default is automatically detected by your system
        // />
-       Time time = TimePickerModal.hours + TimePickerModal.minutes
         saveText(text);
         saveDetails(details);
-        // @ts-ignore
-       saveTime(TimePickerModal);
+        saveTime(time);
         saveRepetiton(checked);
         saveSpecificUniqueDate(uniqueDate);
-        //saveDaysOfWeek(); TODO: How should we do this?
+        //saveDaysOfWeek(); TODO: How should we do this? -> maybe just save the numbers in a number array and then when
+                            // reading we know what the numbers mean like which day is which number
        //saveNextReminderExecution(setRepetitionMode().toS) TODO: How should we do this?
 
        navigation.goBack();
@@ -143,7 +151,7 @@ export default function CreateReminder({ navigation , route}: Props){
         }
     }
 
-    const saveTime = async (time: React.MemoExoticComponent<typeof TimePickerModal>) => {
+    const saveTime = async (time: TimeNumber) => {
         try{
             await AsyncStorage.setItem("time", String(time))//TODO: maybe use JSON.stringify(value);
             alert('Saved time' + time)
