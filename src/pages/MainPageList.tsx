@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFonts } from 'expo-font';
 import React, {useState} from "react";
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import * as Font from 'expo-font';
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
@@ -17,9 +18,14 @@ type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
 
 export default function MainPageList({ navigation , route}: Props) {
 
-    useFonts({
-        'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
-    });
+    // async() => await Font.loadAsync(useFonts({
+    //     'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
+    // }));
+
+     async () =>
+        await Font.loadAsync({
+            'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
+        });
 
     let r1: Reminder = {
         title: "Badge",

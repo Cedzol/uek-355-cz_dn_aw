@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="041cae2e-0496-4fcf-a7de-a69dccdc01e3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/molecules/WeekdaySelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/molecules/WeekdaySelector.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MainPageList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MainPageList.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +20,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2R67YYNa8SbYYXuaPPp3CK5QrJT" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -34,7 +35,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\danny\\Documents\\GitHub\\uek-355-cz_dn_aw\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\Users\\amand\\Documents\\ueK_335_Project_Git\\uek-355-cz_dn_aw\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -62,7 +63,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/feature/data" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
