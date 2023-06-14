@@ -6,9 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="041cae2e-0496-4fcf-a7de-a69dccdc01e3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/RepetitionView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RepetitionView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/TimeView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TimeView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/MainPageList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MainPageList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/molecules/WeekdaySelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/molecules/WeekdaySelector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +68,39 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/feature/MainPage" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/feature/MainPage" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="feature/navigation-create-screen" />
+                </option>
+              </RecentGroup>
+            </list>
           </value>
         </entry>
       </map>

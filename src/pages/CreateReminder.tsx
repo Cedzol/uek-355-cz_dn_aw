@@ -1,9 +1,9 @@
-import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import React, {useState} from "react";
+import {Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, {useCallback, useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
-import {Button, Checkbox, TextInput} from "react-native-paper";
+import {Button, Card, Checkbox, DefaultTheme, Provider, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
 import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
@@ -13,6 +13,23 @@ import moment from "moment/moment";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {RepetitionType} from "../../assets/models/Enums";
 import WeekdaySelector from "../molecules/WeekdaySelector";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
+
+const MD3Theme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: '#DCE2F9',
+        background: '#1D1B20',
+        text: '#C7C6CA',
+        placeholder: '#BFC0C3',
+        accent: '#404659',
+        error: '#F44336',
+        disabled: '#9E9E9E',
+    },
+};
+
 
 type RootStackParamList = {
     MainPageList: undefined;
@@ -21,15 +38,15 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateReminder'>;
 
-export default function CreateReminder({ navigation , route}: Props){
+export default function CreateReminder({navigation, route}: Props) {
 
     const repetitionList = [
         {
-            label : "Stündlich",
+            label: "Stündlich",
             value: RepetitionType.Hourly
         },
         {
-            label : "Täglich",
+            label: "Täglich",
             value: RepetitionType.Daily
         },
         {
@@ -51,40 +68,40 @@ export default function CreateReminder({ navigation , route}: Props){
     let currentTime = new Date();
 
     const [time, setTime] = useState<TimeNumber>({
-        hours : currentTime.getHours(),
-        minutes : currentTime.getMinutes()
+        hours: currentTime.getHours(),
+        minutes: currentTime.getMinutes()
     })
 
     const [timePickerVisible, setTimePickerVisible] = useState(false);
 
-    function onTimePickerDismiss(){
+    function onTimePickerDismiss() {
         setTimePickerVisible(false)
     }
 
-   function onTimePickerConfirm(time : TimeNumber){
+    function onTimePickerConfirm(time: TimeNumber) {
         setTime(time)
-       console.log(time)
+        console.log(time)
         setTimePickerVisible(false)
-   }
+    }
 
-   const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
+    const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
 
     const [uniqueDate, setUniqueDate] = useState<Date>(currentTime)
 
-   function onDatePickerDismiss(){
+    function onDatePickerDismiss() {
         setDatePickerVisible(false);
-   }
+    }
 
-   function onDatePickerConfirm(date : Date){
+    function onDatePickerConfirm(date: Date) {
         setUniqueDate(date)
         setDatePickerVisible(false);
-   }
+    }
 
-   function handleSubmit() {
+    function handleSubmit() {
         navigation.goBack();
-   }
+    }
 
-   const [weekdays, setWeekdays] = useState<string[]>([])
+    const [weekdays, setWeekdays] = useState<string[]>([])
 
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
@@ -97,237 +114,353 @@ export default function CreateReminder({ navigation , route}: Props){
             setWeekdays((prevWeekdays) => [...prevWeekdays, dayIndex]);
         }
     }
+
+    const [fontsLoaded] = Font.useFonts({
+        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
+    });
+
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
+
+
+    const scrollY = new Animated.Value(0);
+    const topBarBackgroundColor = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['#1D1B20', '#2F2C35'],
+        extrapolate: 'clamp',
+    });
+
     return (
-        <View style={styles.container}>
-            <View style={styles.topBar}>
-                <View style={{marginLeft : 28, flexDirection : 'row'}}>
-                    <View>
-                        <Button onPress={() => navigation.goBack()}>
-                            <Icon name="arrow-back-sharp" size={28} color="#DCE2F9"/>
-                        </Button>
+        <Provider theme={MD3Theme}>
+            <View style={styles.container} onLayout={onLayoutRootView}>
+                <Animated.View style={[styles.topBar, {backgroundColor: topBarBackgroundColor}]}>
+                    <View style={{marginLeft: 28, flexDirection: 'row'}}>
+                        <View>
+                            <Button onPress={() => navigation.goBack()}>
+                                <Icon name="arrow-back-sharp" size={28} color="#DCE2F9"/>
+                            </Button>
+                        </View>
+                        <View style={{marginLeft: 'auto', marginRight: 28}}>
+                            <Button onPress={handleSubmit}>
+                                <IconA name={"check"} size={28} color="#DCE2F9"></IconA>
+                            </Button>
+                        </View>
                     </View>
-                    <View style={{marginLeft : 'auto', marginRight : 28}}>
-                        <Button onPress={handleSubmit}>
-                            <IconA name={"check"} size={28} color="#DCE2F9"></IconA>
-                        </Button>
-                    </View>
+                </Animated.View>
+
+                <View style={styles.inputs}>
+                    <TextInput
+                        style={styles.textFields}
+                        onChangeText={setText}
+                        value={text}
+                        mode={"outlined"}
+                        label={"Titel"}
+                        theme={{
+                            colors: {primary: '#B2C5FF'}
+                        }}
+                        textColor={'#C7C6CA'}
+                        outlineColor={"#8F909A"}
+                    />
+
+                    <TextInput
+                        style={styles.textFields}
+                        onChangeText={setDetails}
+                        value={details}
+                        mode={"outlined"}
+                        label={"Notizen"}
+                        theme={{
+                            colors: {primary: '#B2C5FF'}
+                        }}
+                        textColor={'#C7C6CA'}
+                        outlineColor={"#8F909A"}
+                    />
+                </View>
+
+                <TimePickerModal
+                    visible={timePickerVisible}
+                    onDismiss={onTimePickerDismiss}
+                    onConfirm={onTimePickerConfirm}
+                    hours={time.hours} // default: current hours
+                    minutes={time.minutes} // default: current minutes
+                    label="Select time" // optional, default 'Select time'
+                    cancelLabel="Cancel" // optional, default: 'Cancel'
+                    confirmLabel="Ok" // optional, default: 'Ok'
+                    use24HourClock
+                    animationType="fade" // optional, default is 'none'
+                    locale={'de'} // optional, default is automatically detected by your system
+                    style={styles.timePickerModal}
+                    containerStyle={styles.timePickerContainer}
+                    labelStyle={styles.timePickerLabel}
+                    buttonTextStyle={styles.timePickerButtonLabel}
+                    buttonTextSize={styles.timePickerButtonText}
+                />
+
+                <View style={styles.content}>
+                    <Card style={styles.card}>
+                        <TouchableOpacity style={styles.timeBox} onPress={() => setTimePickerVisible(true)}>
+                            <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 10}}>
+                                <Text style={styles.timeBoxLabel}> Uhrzeit</Text>
+                                <View style={{marginLeft: 'auto', marginRight: 'auto'}}>
+                                    <TimeView hours={time?.hours} minutes={time?.minutes} fontSize={45}></TimeView>
+                                    <Text>
+                                        <Text style={styles.labels}>Stunden</Text>
+                                        <View style={styles.labelMargin}></View>
+                                        <Text style={styles.labels}>Minuten</Text>
+                                    </Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </Card>
+                </View>
+
+                <View style={[styles.checkbox, styles.center]}>
+                    <Text style={{marginRight: "auto"}}>
+                        <Checkbox.Item
+                            status={checked ? 'checked' : 'unchecked'}
+                            labelStyle={{color: '#C7C6CA',}}
+                            onPress={() => {
+                                setChecked(!checked);
+                            }}
+                            label={"Reminder wiederholt sich"}
+                            color={"#B2C5FF"}/>
+                    </Text>
+                </View>
+
+                <View style={styles.center}>
+                    {!checked ?
+                        <View>
+                            <DateTimePickerModal
+                                date={uniqueDate}
+                                isVisible={datePickerVisible}
+                                mode="date"
+                                onConfirm={onDatePickerConfirm}
+                                onCancel={onDatePickerDismiss}
+                            />
+                            <View>
+                                <TouchableOpacity onPress={() => setDatePickerVisible(true)}
+                                                  style={styles.datePickerBox}>
+                                    <Text style={{color: '#C7C6CA', fontSize: 20}}>Datum auswählen <IconB
+                                        name="calendar" size={28} color="#DCE2F9"/></Text>
+                                    <TextInput
+                                        editable={false}
+                                        style={[styles.textFields, {
+                                            width: Dimensions.get('window').width / 1.2,
+                                            marginTop: 20
+                                        }]}
+                                        value={(moment(uniqueDate)).format('DD/MM/YYYY')}
+                                        mode={"outlined"}
+                                        theme={{
+                                            colors: {primary: '#B2C5FF'}
+                                        }}
+                                        textColor={'#C7C6CA'}
+                                        outlineColor={"#8F909A"}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        :
+                        <View style={{width: Dimensions.get('window').width / 1.2,}}>
+                            <DropDownPicker
+                                open={showDropDown}
+                                value={repetitionMode}
+                                items={repetitionList}
+                                setOpen={setShowDropDown}
+                                setValue={setRepetitionMode}
+                                style={{
+                                    backgroundColor: '#45464F',
+                                }}
+
+                                listItemContainerStyle={{
+                                    backgroundColor: '#45464F',
+                                }}
+                                textStyle={{
+                                    color: '#C7C6CA',
+                                    fontSize: 16
+                                }}
+                            />
+
+                            {repetitionMode === RepetitionType.Weekly && (
+                                <View style={{
+                                    justifyContent: "center",
+                                    flexDirection: "row",
+                                    gap: 20,
+                                    marginTop: 30,
+                                    zIndex: -1
+                                }}>
+                                    <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector
+                                        fontColor={weekdays.includes("1") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("1") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"M"}/></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector
+                                        fontColor={weekdays.includes("2") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("2") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"D"}/></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector
+                                        fontColor={weekdays.includes("3") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("3") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"M"}/></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector
+                                        fontColor={weekdays.includes("4") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("4") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"D"}/></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector
+                                        fontColor={weekdays.includes("5") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("5") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"F"}/></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector
+                                        fontColor={weekdays.includes("6") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("6") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"S"}/></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleWeekday("7")}><WeekdaySelector
+                                        fontColor={weekdays.includes("7") ? "#0027c2" : "#bdbfc9"}
+                                        color={weekdays.includes("7") ? "#9EAFF2" : "rgba(0,0,0,0)"}
+                                        weekday={"S"}/></TouchableOpacity>
+                                </View>
+                            )}
+                        </View>
+
+                    }
                 </View>
             </View>
-
-            <View style={styles.inputs}>
-                <TextInput
-                    style={styles.textFields}
-                    onChangeText={setText}
-                    value={text}
-                    mode={"outlined"}
-                    label={"Titel"}
-                    theme={{
-                        colors : {primary : '#B2C5FF'}
-                    }}
-                    textColor={'#C7C6CA'}
-                    outlineColor={"#B2C5FF"}
-                />
-
-                <TextInput
-                    style={styles.textFields}
-                    onChangeText={setDetails}
-                    value={details}
-                    mode={"outlined"}
-                    label={"Notizen"}
-                    theme={{
-                        colors : {primary : '#B2C5FF'}
-                    }}
-                    textColor={'#C7C6CA'}
-                    outlineColor={"#B2C5FF"}
-                />
-            </View>
-
-            <TimePickerModal
-                visible={timePickerVisible}
-                onDismiss={onTimePickerDismiss}
-                onConfirm={onTimePickerConfirm}
-                hours={time.hours} // default: current hours
-                minutes={time.minutes} // default: current minutes
-                label="Select time" // optional, default 'Select time'
-                cancelLabel="Cancel" // optional, default: 'Cancel'
-                confirmLabel="Ok" // optional, default: 'Ok'
-                use24HourClock
-                animationType="fade" // optional, default is 'none'
-                locale={'de'} // optional, default is automically detected by your system
-            />
-            <View style={styles.center}>
-                <TouchableOpacity style={styles.timeBox} onPress={() => setTimePickerVisible(true)}>
-                    <View style={{ flexDirection: 'row' , marginTop : 10, marginLeft : 10}}>
-                        <Text style={styles.timeBoxLabel}> Uhrzeit</Text>
-                        <View style={{ marginLeft: 'auto', marginRight : 'auto'}}>
-                            <TimeView hours={time?.hours} minutes={time?.minutes} fontSize={45}></TimeView>
-                            <Text>
-                                <Text style={styles.labels}>Stunden</Text>
-                                <View style={styles.labelMargin}></View>
-                                <Text style={styles.labels}>Minuten</Text>
-                            </Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-
-            <View style={[styles.checkbox, styles.center]}>
-                <Text style={{marginRight : "auto"}}>
-                    <Checkbox.Item
-                        status={checked ? 'checked' : 'unchecked'}
-                        labelStyle={{color : '#C7C6CA',}}
-                        onPress={() => {
-                            setChecked(!checked);
-                        }}
-                        label={"Reminder wiederholt sich"}/>
-                </Text>
-            </View>
-
-            <View style={styles.center}>
-                {!checked?
-                    <View>
-                        <DateTimePickerModal
-                            date={uniqueDate}
-                            isVisible={datePickerVisible}
-                            mode="date"
-                            onConfirm={onDatePickerConfirm}
-                            onCancel={onDatePickerDismiss}
-                        />
-                        <View>
-                            <TouchableOpacity onPress={() => setDatePickerVisible(true)} style={styles.datePickerBox}>
-                                <Text style={{color : '#C7C6CA', fontSize : 20}}>Datum auswählen <IconB name="calendar" size={28} color="#DCE2F9"/></Text>
-                            <TextInput
-                                editable={false}
-                                style={[styles.textFields, {width: Dimensions.get('window').width / 1.2, marginTop : 20}]}
-                                value={(moment(uniqueDate)).format('DD/MM/YYYY') }
-                                mode={"outlined"}
-                                theme={{
-                                    colors : {primary : '#B2C5FF'}
-                                }}
-                                textColor={'#C7C6CA'}
-                                outlineColor={"#B2C5FF"}
-                            />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                :
-                    <View style={{width : Dimensions.get('window').width / 1.2, }}>
-                        <DropDownPicker
-                            open={showDropDown}
-                            value={repetitionMode}
-                            items={repetitionList}
-                            setOpen={setShowDropDown}
-                            setValue={setRepetitionMode}
-                            style={{
-                                backgroundColor : '#45464F',
-                            }}
-
-                            listItemContainerStyle={{
-                                backgroundColor : '#45464F',
-                            }}
-                            textStyle={{
-                                color: '#C7C6CA',
-                                fontSize : 16
-                            }}
-                        />
-
-                        {repetitionMode === RepetitionType.Weekly && (
-                            <View style={{ justifyContent: "center", flexDirection: "row", gap: 20, marginTop: 30, zIndex: -1 }}>
-                                <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector fontColor={weekdays.includes("1") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("1") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector fontColor={weekdays.includes("2") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("2") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"D"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector fontColor={weekdays.includes("3") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("3") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector fontColor={weekdays.includes("4") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("4") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"D"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector fontColor={weekdays.includes("5") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("5") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"F"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector fontColor={weekdays.includes("6") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("6") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"S"} /></TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleWeekday("7")}><WeekdaySelector fontColor={weekdays.includes("7") ? "#0027c2" : "#bdbfc9"} color={weekdays.includes("7") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"S"} /></TouchableOpacity>
-                            </View>
-                        )}
-                    </View>
-
-                }
-            </View>
-        </View>
+        </Provider>
     )
 }
 
 const styles = StyleSheet.create({
-    datePickerBox : {
-        marginTop : 15,
-        paddingTop : 15,
-        backgroundColor : '#45464F',
-        borderRadius : 15,
-        width : Dimensions.get('window').width / 1.1,
-        alignItems : "center"
+    datePickerBox: {
+        marginTop: 15,
+        paddingTop: 15,
+        backgroundColor: '#45464F',
+        borderRadius: 15,
+        width: Dimensions.get('window').width / 1.1,
+        alignItems: "center"
     },
 
-    checkbox : {
-        marginTop : 20
+    checkbox: {
+        marginTop: 20
     },
 
-    repeatable : {
+    repeatable: {
         color: '#C7C6CA',
-        fontSize : 16
+        fontSize: 16
     },
 
-    labels : {
+    labels: {
         color: '#C7C6CA',
     },
 
-    labelMargin : {
-        paddingRight : 50,
+    labelMargin: {
+        paddingRight: 50,
     },
 
     container: {
         backgroundColor: '#1D1B20',
-        width : Dimensions.get('window').width,
+        width: '100%',
         flex: 1,
-
+    },
+    content: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    inputs: {
+        alignItems: "center",
+        marginTop: 130,
     },
 
-    inputs : {
-        alignItems : "center",
-        marginTop : 30,
-    },
-
-    textFields : {
+    textFields: {
         width: Dimensions.get('window').width / 1.1,
-        backgroundColor : '#1D1B20',
-        marginBottom : 30
+        backgroundColor: '#1D1B20',
+        marginBottom: 30
     },
 
-    center : {
-        alignItems : "center",
+    center: {
+        alignItems: "center",
     },
 
     topBar: {
-
         width: Dimensions.get('window').width,
-        height : 35,
-        borderColor : '#C7C6CA',
-        borderBottomWidth : 1,
-        marginTop : 50,
+        paddingTop: 30,
+        marginTop: 20,
+        height: 70,
+        borderBottomWidth: 1,
+        borderBottomColor: '#3c3d45',
+        position: 'absolute',
+        top: 0,
+        zIndex: 1,
     },
 
-    timeBox : {
-        backgroundColor : '#45464F',
+    timeBox: {
+        backgroundColor: '#45464F',
         width: Dimensions.get('window').width / 1.1,
-        height : 100,
-        borderRadius : 15
+        height: 100,
+        borderRadius: 15
     },
 
-    timeBoxLabel : {
+    timeBoxLabel: {
         color: '#C7C6CA',
-        fontSize : 20,
-        marginTop : 15
+        fontSize: 20,
+        marginTop: 15
     },
 
-    inlineTime : {
-        marginLeft : 10,
+    inlineTime: {
+        marginLeft: 10,
     },
 
-    timeDisplayBox : {
-        backgroundColor : '#ffffff',
-        width : 40,
-        height : 40
+    timeDisplayBox: {
+        backgroundColor: '#ffffff',
+        width: 40,
+        height: 40
+    },
+    timePickerLabel: {
+        color: '#C7C6CA',
+        fontSize: 16,
+    },
+    timePickerButtonLabel: {
+        color: '#DCE2F9',
+    },
+    timePickerButtonText: {
+        fontSize: 16,
+    },
+    timePickerModal: {
+        backgroundColor: '#1D1B20',
+    },
+    timePickerContainer: {
+        backgroundColor: '#25232A',
+    },
+    timePickerLabel: {
+        color: '#C7C6CA',
+        fontSize: 16,
+    },
+    timePickerButtonLabel: {
+        color: '#DCE2F9',
+    },
+    timePickerButtonText: {
+        fontSize: 16,
+    },
+    card: {
+        width: Dimensions.get('window').width / 1.1,
+        backgroundColor: '#25232A',
+        marginBottom: 15,
+        elevation: 4,
+    },
+    cardTitle: {
+        color: '#C7C6CA',
+        fontSize: 20,
+    },
+    cardContent: {
+        flexDirection: 'column',
+    },
+    cardTitleContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    cardDetail: {
+        color: '#bfc0c3',
+        fontSize: 12,
+        paddingTop: 4,
     },
 });

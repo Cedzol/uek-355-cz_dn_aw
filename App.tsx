@@ -12,9 +12,21 @@ NavigationBar.setBackgroundColorAsync('#ffffff01');
 export default function App() {
     const Stack = createNativeStackNavigator();
 
+    const config = {
+        animation: 'spring',
+        config: {
+            stiffness: 1000,
+            damping: 500,
+            mass: 3,
+            overshootClamping: true,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01,
+        },
+    };
+
     return (
       <NavigationContainer>
-          <Stack.Navigator initialRouteName={"MainPageList"} screenOptions={{headerShown : false}}>
+          <Stack.Navigator initialRouteName={"MainPageList"} screenOptions={{headerShown : false, animation: "slide_from_bottom", presentation: "modal"}}>
               <Stack.Screen
                   name="MainPageList"
                   component={MainPageList}
