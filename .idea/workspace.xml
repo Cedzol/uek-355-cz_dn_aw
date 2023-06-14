@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="041cae2e-0496-4fcf-a7de-a69dccdc01e3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/molecules/WeekdaySelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/molecules/WeekdaySelector.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -19,6 +18,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectId" id="2R67YYNa8SbYYXuaPPp3CK5QrJT" />
   <component name="ProjectLevelVcsManager">

@@ -3,7 +3,7 @@ import React, {useCallback, useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
-import {Button, Card, Checkbox, Provider, TextInput} from "react-native-paper";
+import {Button, Card, Checkbox, PaperProvider, Provider, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
 import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
@@ -165,7 +165,7 @@ export default function CreateReminder({navigation, route}: Props) {
     });
 
     return (
-        <Provider theme={theme}>
+        <PaperProvider theme={theme}>
             <View style={styles.container} onLayout={onLayoutRootView}>
                 <Animated.View style={[styles.topBar, {backgroundColor: topBarBackgroundColor}]}>
                     <View style={{marginLeft: 10, flexDirection: 'row'}}>
@@ -257,6 +257,7 @@ export default function CreateReminder({navigation, route}: Props) {
                                 onConfirm={onDatePickerConfirm}
                                 onCancel={onDatePickerDismiss}
                                 themeVariant={"dark"}
+                                isDarkModeEnabled
                             />
                             <Card style={styles.card2}>
                                 <Card.Content style={styles.cardContent}>
@@ -287,8 +288,8 @@ export default function CreateReminder({navigation, route}: Props) {
                                 value={repetitionMode}
                                 setValue={setRepetitionMode}
                                 list={repetitionList}
-                                dropDownItemTextStyle={{color: '#FFF'}}
-                                dropDownItemSelectedTextStyle={{color: '#FFF'}}
+                                dropDownItemTextStyle={{color: '#FFF', fontFamily: "ProductSans-Regular"}}
+                                dropDownItemSelectedTextStyle={{color: '#FFF', fontFamily: "ProductSans-Regular"}}
                             />
 
                             {repetitionMode === RepetitionType.Weekly && (
@@ -335,7 +336,7 @@ export default function CreateReminder({navigation, route}: Props) {
                     }
                 </View>
             </View>
-        </Provider>
+        </PaperProvider>
     )
 }
 
