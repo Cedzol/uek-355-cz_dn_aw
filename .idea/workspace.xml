@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="041cae2e-0496-4fcf-a7de-a69dccdc01e3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/fonts/ProductSans-Regular.ttf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/fonts/ProductSans-Regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/RepetitionView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/RepetitionView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/TimeView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/TimeView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/MainPageList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MainPageList.tsx" afterDir="false" />
     </list>

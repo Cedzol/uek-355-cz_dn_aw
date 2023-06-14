@@ -23,7 +23,7 @@ export default function RepetitionView(props: any) {
     }
 
     const [fontsLoaded] = Font.useFonts({
-        'ProductSans-Regular': require('./../../assets/fonts/ProductSans-Regular.ttf'),
+        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
     });
 
     const onLayoutRootView = useCallback(async () => {

@@ -41,9 +41,8 @@ export default function TimeView (props : any){
 }
 
 const styles = StyleSheet.create({
-    textColor: {
-        marginLeft: 3,
-        fontSize: 23,
+    text : {
+        fontSize : 26,
         color: '#bfc0c3',
         paddingLeft : 5,
         paddingRight : 5,
@@ -51,20 +50,15 @@ const styles = StyleSheet.create({
         paddingBottom : 5
     },
 
-
-
-    divider: {
+    divider : {
         color: '#bfc0c3',
-        fontSize: 26,
-        marginLeft: 10,
-        marginRight: 10
+        fontSize : 26,
+        marginLeft : 10,
+        marginRight : 10
     },
 
-    textBox: {
-        height: 40,
-        width: 40,
-        backgroundColor: '#474850',
-        borderRadius: 8,
-        padding: 4,
+    textBox : {
+        backgroundColor : '#474850',
+        borderRadius : 4,
     }
 });

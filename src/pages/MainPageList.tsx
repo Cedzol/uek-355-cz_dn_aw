@@ -9,6 +9,7 @@ import * as Font from 'expo-font';
 import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import RepetitionView from "../components/RepetitionView";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -140,8 +141,8 @@ export default function MainPageList({navigation, route}: Props) {
                     <Text style={styles.title}>RemindMe!</Text>
                 </Animated.View>
                 <ScrollView
-                    style={{paddingTop: 30}}
-                    onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: false})}
+                    style={{ paddingTop: 30 }}
+                    onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
                     scrollEventThrottle={16}
                 >
                     <View style={styles.content}>
@@ -149,8 +150,12 @@ export default function MainPageList({navigation, route}: Props) {
                             <Card key={index} style={styles.card}>
                                 <Card.Content style={styles.cardContent}>
                                     <View style={styles.cardTitleContainer}>
-                                        <Text style={[styles.cardTitle, {flex: 1}]}>{reminder.title}</Text>
-                                        <TimeView reminder={reminder} style={styles.timeView}/>
+                                        <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.title}</Text>
+                                        <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26}></TimeView>
+                                    </View>
+                                    <Text style={styles.cardDetail}>{reminder.details}</Text>
+                                    <View style={styles.repetitionView}>
+                                        <RepetitionView reminder={reminder} />
                                     </View>
                                 </Card.Content>
                             </Card>
@@ -171,6 +176,7 @@ export default function MainPageList({navigation, route}: Props) {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#1D1B20',
         width: '100%',
         flex: 1,
         alignItems: 'center',
