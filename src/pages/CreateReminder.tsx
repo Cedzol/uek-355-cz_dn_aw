@@ -84,13 +84,20 @@ export default function CreateReminder({ navigation , route}: Props){
         navigation.goBack();
    }
 
-   const [weekdays, setWeekdays] = useState<number[]>([])
+   const [weekdays, setWeekdays] = useState<string[]>([])
 
-    function handleWeekday(dayIndex : number){
-        //handle if weekdays array contains daysIndex
-        //Yes, remove dayIndex from array
-        //No, add dayIndex to weekdays array
-        //todo
+    function handleWeekday(dayIndex : string){
+        if (weekdays.find(x => x === dayIndex)){
+            console.log("splice")
+            let newWeekdays = weekdays;
+            newWeekdays.splice(newWeekdays.indexOf(dayIndex), 1);
+            console.log(newWeekdays)
+            setWeekdays(newWeekdays);
+        }
+        else {
+            console.log("add")
+            setWeekdays(weekdays => [...weekdays, dayIndex])
+        }
     }
 
     return (
@@ -229,13 +236,14 @@ export default function CreateReminder({ navigation , route}: Props){
 
                         {repetitionMode == RepetitionType.Weekly?
                             <View style={{justifyContent : "center", flexDirection : "row", gap : 20, marginTop : 30, zIndex : -1}}>
-                                    <TouchableOpacity onPress={() => handleWeekday(0)}><WeekdaySelector weekday={"M"}></WeekdaySelector></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleWeekday(1)}><WeekdaySelector weekday={"D"}></WeekdaySelector></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleWeekday(2)}><WeekdaySelector weekday={"M"}></WeekdaySelector></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleWeekday(3)}><WeekdaySelector weekday={"D"}></WeekdaySelector></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleWeekday(4)}><WeekdaySelector weekday={"F"}></WeekdaySelector></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleWeekday(5)}><WeekdaySelector weekday={"S"}></WeekdaySelector></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => handleWeekday(6)}><WeekdaySelector weekday={"S"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector fontColor={weekdays.find(x => x === "1") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "1") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector fontColor={weekdays.find(x => x === "2") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "2") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector fontColor={weekdays.find(x => x === "3") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "3") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector fontColor={weekdays.find(x => x === "4") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "4") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector fontColor={weekdays.find(x => x === "5") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "5") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector fontColor={weekdays.find(x => x === "6") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "6") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleWeekday("7")}><WeekdaySelector fontColor={weekdays.find(x => x === "7") ? "#0027c2" : "#bdbfc9"} color={weekdays.find(x => x === "7") ? "#9EAFF2" : "rgba(0,0,0,0)"} weekday={"M"}></WeekdaySelector></TouchableOpacity>
+
                             </View>
                             : null}
                     </View>
@@ -325,5 +333,5 @@ const styles = StyleSheet.create({
         backgroundColor : '#ffffff',
         width : 40,
         height : 40
-    }
+    },
 });
