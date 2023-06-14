@@ -113,7 +113,7 @@ export default function MainPageList({navigation, route}: Props) {
     const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r6]);
 
     const [fontsLoaded] = Font.useFonts({
-        'ProductSans-Regular': require('./../../assets/fonts/ProductSans-Regular.ttf'),
+        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
     });
 
     const onLayoutRootView = useCallback(async () => {

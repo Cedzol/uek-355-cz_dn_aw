@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
         paddingBottom : 5
     },
 
+
+
     divider: {
         color: '#bfc0c3',
         fontSize: 26,
