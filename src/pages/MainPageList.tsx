@@ -1,6 +1,6 @@
 import {Animated, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Button, Card, DefaultTheme, Provider, TouchableRipple} from 'react-native-paper';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {Reminder} from '../../assets/models/Reminder';
 import {RepetitionType} from '../../assets/models/Enums';
 import TimeView from '../components/TimeView';
@@ -10,6 +10,7 @@ import {useFonts} from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import RepetitionView from "../components/RepetitionView";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -37,9 +38,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
 
 export default function MainPageList({navigation, route}: Props) {
 
-    useFonts({
-        'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
-    });
+     async () =>
+        await Font.loadAsync({
+            'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
+        });
 
     let r1: Reminder = {
         title: 'Badge',
@@ -111,7 +113,41 @@ export default function MainPageList({navigation, route}: Props) {
         nextReminderExecution: new Date('2023-06-09 9:05'),
     };
 
-    const [reminders, setReminders] = useState([r1, r2, r3, r4, r5, r6]);
+    const reminders = (() => {
+        const storageReminders: Reminder[] = [];
+
+        return (): Reminder[] => {
+            AsyncStorage.getAllKeys().then((storageKeys: readonly string[]) => {
+                const getItemsPromises: Promise<void>[] = [];
+
+                for (const element of storageKeys) {
+                    const storageKey = element;
+                    const savedReminderPromise = AsyncStorage.getItem(storageKey);
+
+                    const promise = savedReminderPromise.then((savedReminder: string | null) => {
+                        if (typeof savedReminder === "string") {
+                            const currentReminder = JSON.parse(savedReminder);
+                            storageReminders.push(currentReminder);
+                            console.log(currentReminder);
+                        }
+                    }).catch((error: any) => {
+                        console.log(error);
+                    });
+                    getItemsPromises.push(promise);
+                }
+
+                return Promise.all(getItemsPromises).then(() => {
+                    return storageReminders;
+                });
+            });
+
+            return storageReminders; // Return the initial array immediately
+        };
+    })();
+
+// Calling the reminders function
+    const result: Reminder[] = reminders(); //TODO: Delete this
+    console.log(result);
 
     const [fontsLoaded] = Font.useFonts({
         'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
@@ -146,8 +182,7 @@ export default function MainPageList({navigation, route}: Props) {
                     scrollEventThrottle={16}
                 >
                     <View style={styles.content}>
-                        {reminders.map((reminder: Reminder, index) => (
-                            <TouchableOpacity onPress={() => navigation.navigate('UpdateReminder', {reminder: reminder})}>
+                        {reminders().map((reminder: Reminder, index) => (
                             <Card key={index} style={styles.card}>
                                 <Card.Content style={styles.cardContent}>
                                     <View style={styles.cardTitleContainer}>

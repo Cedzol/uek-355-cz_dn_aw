@@ -5,7 +5,7 @@ import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
 import {Button, Card, Checkbox, PaperProvider, Provider, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
-import {TimeNumber} from "../../assets/models/Time";
+import {Time, TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -61,6 +61,7 @@ const theme = {
     }
 }
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
     MainPageList: undefined;
@@ -128,10 +129,6 @@ export default function CreateReminder({navigation, route}: Props) {
         setDatePickerVisible(false);
     }
 
-    function handleSubmit() {
-        navigation.goBack();
-    }
-
     const [weekdays, setWeekdays] = useState<string[]>([])
 
     function handleWeekday(dayIndex: string) {
@@ -163,6 +160,40 @@ export default function CreateReminder({navigation, route}: Props) {
         outputRange: ['#1D1B20', '#2F2C35'],
         extrapolate: 'clamp',
     });
+    function genUniqueId(): string {
+        const dateStr = Date
+            .now()
+            .toString(36); // convert num to base 36 and stringify
+
+        const randomStr = Math
+            .random()
+            .toString(36)
+            .substring(2, 8); // start at index 2 to skip decimal point
+
+        return `${dateStr}-${randomStr}`;
+    }
+
+    function handleSubmit() {
+       const identifiableReminder = { //TODO: Delete this message: hier kann man nachher eigentlich mit NULL arbeiten -> ?
+           text : text,
+           details : details,
+           time : time,
+           repeating : checked,
+           uniqueDate : uniqueDate,
+           repeatFrequency: repetitionMode,
+           daysOfWeek : weekdays, //TODO: Delete this message: wenn das NULL ist dann sollte es repeat wekkly sein
+       }
+
+       const identifiableReminderObject = JSON.stringify(identifiableReminder);
+
+       AsyncStorage.setItem(genUniqueId(), identifiableReminderObject).then(async (message: any) => {
+          AsyncStorage.multiGet(await AsyncStorage.getAllKeys()).then((result: readonly string[]) => {
+               console.log("Test", result)
+           });
+       }); //TODO: Delete this message: has to be .toString() otherwise there is a Malformed calls from JS error
+        //TODO: Delete the log here (and in general delete logs)
+       navigation.goBack();
+   }
 
     return (
         <PaperProvider theme={theme}>
