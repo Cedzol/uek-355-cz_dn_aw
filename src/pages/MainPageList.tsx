@@ -1,4 +1,4 @@
-import {Animated, Dimensions, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Animated, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Button, Card, DefaultTheme, Provider, TouchableRipple} from 'react-native-paper';
 import React, {useCallback, useState} from 'react';
 import {Reminder} from '../../assets/models/Reminder';
@@ -147,6 +147,7 @@ export default function MainPageList({navigation, route}: Props) {
                 >
                     <View style={styles.content}>
                         {reminders.map((reminder: Reminder, index) => (
+                            <TouchableOpacity onPress={() => navigation.navigate('UpdateReminder', {reminder: reminder})}>
                             <Card key={index} style={styles.card}>
                                 <Card.Content style={styles.cardContent}>
                                     <View style={styles.cardTitleContainer}>
@@ -160,6 +161,7 @@ export default function MainPageList({navigation, route}: Props) {
                                     </View>
                                 </Card.Content>
                             </Card>
+                            </TouchableOpacity>
                         ))}
                     </View>
                 </ScrollView>

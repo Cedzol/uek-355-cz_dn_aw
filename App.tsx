@@ -5,6 +5,7 @@ import MainPageList from "./src/pages/MainPageList";
 import CreateReminder from "./src/pages/CreateReminder"
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import UpdateReminder from "./src/pages/UpdateReminder";
 
 NavigationBar.setPositionAsync('absolute');
 NavigationBar.setBackgroundColorAsync('#ffffff01');
@@ -36,6 +37,10 @@ export default function App() {
                   name={"CreateReminder"}
                   component={CreateReminder}
                   />
+              <Stack.Screen
+                  name={"UpdateReminder"}
+                  component={UpdateReminder}
+              />
           </Stack.Navigator>
           <StatusBar translucent style="light" backgroundColor="transparent" />
         <ReactStatusBar translucent barStyle="light-content" backgroundColor="transparent" />
