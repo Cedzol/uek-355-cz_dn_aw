@@ -14,7 +14,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {RepetitionType} from "../../assets/models/Enums";
 import WeekdaySelector from "../molecules/WeekdaySelector";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {v4 as uuidv4} from 'uuid';
 
 type RootStackParamList = {
     MainPageList: undefined;
@@ -96,7 +95,20 @@ export default function CreateReminder({ navigation , route}: Props){
         }
     }
 
-   function handleSubmit() {
+    function genUniqueId(): string {
+        const dateStr = Date
+            .now()
+            .toString(36); // convert num to base 36 and stringify
+
+        const randomStr = Math
+            .random()
+            .toString(36)
+            .substring(2, 8); // start at index 2 to skip decimal point
+
+        return `${dateStr}-${randomStr}`;
+    }
+
+    function handleSubmit() {
        const identifiableReminder = { //TODO: Delete this message: hier kann man nachher eigentlich mit NULL arbeiten -> ?
            text : text,
            details : details,
@@ -109,8 +121,12 @@ export default function CreateReminder({ navigation , route}: Props){
 
        const identifiableReminderObject = JSON.stringify(identifiableReminder);
 
-       AsyncStorage.setItem(uuidv4.toString(), identifiableReminderObject); //TODO: Delete this message: has to be .toString() otherwise there is a Malformed calls from JS error
-       alert("identifiableReminderObject" + identifiableReminderObject);
+       AsyncStorage.setItem(genUniqueId(), identifiableReminderObject).then(async (message: any) => {
+          AsyncStorage.multiGet(await AsyncStorage.getAllKeys()).then((result: readonly string[]) => {
+               console.log("Test", result)
+           });
+       }); //TODO: Delete this message: has to be .toString() otherwise there is a Malformed calls from JS error
+        //TODO: Delete the log here (and in general delete logs)
        navigation.goBack();
    }
 
