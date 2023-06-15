@@ -385,7 +385,7 @@ export default function UpdateReminder({navigation, route}: Props) {
                             </Card>
                         </View>
                         :
-                        <View style={{width: 'auto', alignSelf: 'flex-start', marginLeft: 15}}>
+                        <View style={{width: 'auto', alignSelf: 'flex-start', marginLeft: 15, marginRight : 15}}>
                             <DropDownPicker
                                 placeholder={"Wähle aus"}
                                 open={showDropDown}
