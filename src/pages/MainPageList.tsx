@@ -47,8 +47,8 @@ export default function MainPageList({navigation, route}: Props) {
         details: 'Badge nicht vergessen',
         repetition: RepetitionType.Daily,
         time: {
-            hours: '13',
-            minutes: '00',
+            hours: '11',
+            minutes: '11',
         },
         nextReminderExecution: new Date('2023-06-10 13:00'),
     };
@@ -97,7 +97,7 @@ export default function MainPageList({navigation, route}: Props) {
             hours: '10',
             minutes: '00',
         },
-        specificUniqueDate: new Date('2023-06-14'),
+        specificUniqueDate: new Date('2023-06-15'),
         nextReminderExecution: new Date('2023-06-14 10:00'),
     };
 
@@ -107,7 +107,7 @@ export default function MainPageList({navigation, route}: Props) {
         repetition: RepetitionType.Hourly,
         time: {
             hours: '10',
-            minutes: '05',
+            minutes: '54',
         },
         nextReminderExecution: new Date('2023-06-09 9:05'),
     };
@@ -166,6 +166,9 @@ export default function MainPageList({navigation, route}: Props) {
 
             </View>
             <View style={styles.addButtonContainer}>
+                <Button onPress={() => NotificationCentre(r2, 3, "1")}>
+                    Schedule
+                </Button>
                 <Button onPress={() => navigation.navigate('CreateReminder')}>
                     <Icon name="plus" size={24} color="#DCE2F9"/>
                 </Button>
