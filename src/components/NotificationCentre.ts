@@ -114,3 +114,8 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
     };
 
 }
+
+export function updateNotifications(reminder : Reminder, weekday : number | null, identifier : string){
+    Notifications.cancelScheduledNotificationAsync(identifier);
+    NotificationCentre(reminder, weekday, identifier)
+}
