@@ -9,18 +9,20 @@ import * as SplashScreen from 'expo-splash-screen';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RepetitionView(props: any) {
-    const reminder: Reminder = props.reminder;
+export default function RepetitionView(props: { reminder: Reminder }) {
+    const { reminder } = props;
 
-    const daysOfWeek: string[] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+    const daysOfWeek: string[] = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 
     let dayString: string[] = [];
 
-    if (reminder.repetition == RepetitionType.Weekly) {
+    if (reminder.repeatFrequency === RepetitionType.Weekly) {
         for (let d of reminder.daysOfWeek!) {
-            dayString.push(' ' + daysOfWeek[d]);
+            dayString.push(' ' + daysOfWeek[d-1]);
         }
     }
+
+    const repeatFrequency = getRepeatFrequency(reminder.repeatFrequency);
 
     const [fontsLoaded] = Font.useFonts({
         'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
@@ -38,36 +40,45 @@ export default function RepetitionView(props: any) {
 
     return (
         <View onLayout={onLayoutRootView}>
-            <Chip
-                icon={reminder.repetition === RepetitionType.Unique ? 'numeric-1' : 'repeat'}
-                mode='outlined'
-                style={styles.chip}
-            >
-                {reminder.repetition == RepetitionType.Unique ? (
+            <Chip icon={reminder.repeatFrequency === RepetitionType.Unique ? 'numeric-1' : 'repeat'} mode='outlined' style={styles.chip}>
+                {reminder.repeatFrequency === RepetitionType.Unique ? (
                     <Text style={[styles.text, { marginLeft: 10 }]}>
-                        {reminder.repetition + ', ' + moment(reminder.specificUniqueDate).format('DD.MM.YYYY')}
+                        {reminder.repeatFrequency + ', ' + moment(reminder.uniqueDate).format('DD.MM.YYYY')}
                     </Text>
                 ) : null}
 
-                {reminder.repetition == RepetitionType.Hourly ? (
-                    <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
+                {reminder.repeatFrequency === RepetitionType.Hourly ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>{repeatFrequency}</Text>
                 ) : null}
 
-                {reminder.repetition == RepetitionType.Daily ? (
-                    <Text style={[styles.text, { marginLeft: 10 }]}>{reminder.repetition}</Text>
+                {reminder.repeatFrequency === RepetitionType.Daily ? (
+                    <Text style={[styles.text, { marginLeft: 10 }]}>{repeatFrequency}</Text>
                 ) : null}
 
-                {reminder.repetition == RepetitionType.Weekly ? (
+                {reminder.repeatFrequency === RepetitionType.Weekly ? (
                     <Text style={[styles.text, { marginLeft: 10 }]}>
-                        {reminder.repetition + ',' + dayString}
+                        {repeatFrequency + ',' + dayString}
                     </Text>
                 ) : null}
-
             </Chip>
         </View>
     );
-
 }
+
+const getRepeatFrequency = (repetitionType: RepetitionType): string => {
+    switch (repetitionType) {
+        case RepetitionType.Unique:
+            return 'Einmalig';
+        case RepetitionType.Hourly:
+            return 'Stündlich';
+        case RepetitionType.Daily:
+            return 'Täglich';
+        case RepetitionType.Weekly:
+            return 'Wöchentlich';
+        default:
+            return '';
+    }
+};
 
 const styles = StyleSheet.create({
     chip: {
@@ -77,5 +88,5 @@ const styles = StyleSheet.create({
         fontFamily: 'ProductSans-Regular',
         color: '#B2C5FF',
         fontSize: 14,
-    }
+    },
 });

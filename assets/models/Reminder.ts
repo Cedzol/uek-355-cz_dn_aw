@@ -2,11 +2,12 @@ import {RepetitionType} from "./Enums";
 import {Time} from "./Time";
 
 export interface Reminder {
-    title : string,
+    id: string,
+    text : string,
     details : string,
     time : Time,
-    repetition : RepetitionType // unique, hourly, daily, weekly
-    specificUniqueDate? : Date // if unique repetition, what Date?
+    repeatFrequency : RepetitionType // unique, hourly, daily, weekly
+    uniqueDate? : Date // if unique repetition, what Date?
     daysOfWeek? : number[], // if weekly repetition, on which days of week
     nextReminderExecution : Date
 }

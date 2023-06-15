@@ -3,9 +3,9 @@ import React, {useCallback, useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
-import {Button, Card, Checkbox, PaperProvider, Provider, TextInput} from "react-native-paper";
+import {Button, Card, Checkbox, PaperProvider, TextInput} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
-import {Time, TimeNumber} from "../../assets/models/Time";
+import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -15,6 +15,7 @@ import WeekdaySelector from "../molecules/WeekdaySelector";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import DropDown from "react-native-paper-dropdown";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const theme = {
     "colors": {
@@ -61,11 +62,10 @@ const theme = {
     }
 }
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
+    UpdateReminder: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateReminder'>;
@@ -87,13 +87,13 @@ export default function CreateReminder({navigation, route}: Props) {
         }
     ]
 
-    const [text, setText] = React.useState('');
+    const [text, setText] = useState('');
 
     const [details, setDetails] = useState('');
 
-    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Daily)
+    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Unique)
 
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
 
     const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
@@ -161,39 +161,34 @@ export default function CreateReminder({navigation, route}: Props) {
         extrapolate: 'clamp',
     });
     function genUniqueId(): string {
-        const dateStr = Date
-            .now()
-            .toString(36); // convert num to base 36 and stringify
-
-        const randomStr = Math
-            .random()
-            .toString(36)
-            .substring(2, 8); // start at index 2 to skip decimal point
-
+        const dateStr = Date.now().toString(36); // convert num to base 36 and stringify
+        const randomStr = Math.random().toString(36).substring(2, 8); // start at index 2 to skip decimal point
         return `${dateStr}-${randomStr}`;
     }
 
     function handleSubmit() {
-       const identifiableReminder = { //TODO: Delete this message: hier kann man nachher eigentlich mit NULL arbeiten -> ?
-           text : text,
-           details : details,
-           time : time,
-           repeating : checked,
-           uniqueDate : uniqueDate,
-           repeatFrequency: repetitionMode,
-           daysOfWeek : weekdays, //TODO: Delete this message: wenn das NULL ist dann sollte es repeat wekkly sein
-       }
+        const id = genUniqueId(); // Generate a unique ID
 
-       const identifiableReminderObject = JSON.stringify(identifiableReminder);
+        const identifiableReminder = {
+            id: id,
+            text: text,
+            details: details,
+            time: time,
+            repeating: checked,
+            uniqueDate: uniqueDate,
+            repeatFrequency: repetitionMode,
+            daysOfWeek: weekdays,
+        };
 
-       AsyncStorage.setItem(genUniqueId(), identifiableReminderObject).then(async (message: any) => {
-          AsyncStorage.multiGet(await AsyncStorage.getAllKeys()).then((result: readonly string[]) => {
-               console.log("Test", result)
-           });
-       }); //TODO: Delete this message: has to be .toString() otherwise there is a Malformed calls from JS error
-        //TODO: Delete the log here (and in general delete logs)
-       navigation.goBack();
-   }
+        const identifiableReminderObject = JSON.stringify(identifiableReminder);
+
+        AsyncStorage.setItem(id, identifiableReminderObject).then(async () => {
+            const keys = await AsyncStorage.getAllKeys();
+            console.log(keys);
+            navigation.goBack();
+        });
+    }
+
 
     return (
         <PaperProvider theme={theme}>
@@ -272,6 +267,7 @@ export default function CreateReminder({navigation, route}: Props) {
                             labelStyle={{color: '#C7C6CA',}}
                             onPress={() => {
                                 setChecked(!checked);
+                                setRepetitionMode(RepetitionType.Unique)
                             }}
                             label={"Reminder wiederholt sich"}
                             color={"#B2C5FF"}/>
@@ -335,27 +331,27 @@ export default function CreateReminder({navigation, route}: Props) {
                                     <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector
                                         fontColor={weekdays.includes("1") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("1") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"M"}/></TouchableOpacity>
+                                        weekday={"S"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector
                                         fontColor={weekdays.includes("2") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("2") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"D"}/></TouchableOpacity>
+                                        weekday={"M"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector
                                         fontColor={weekdays.includes("3") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("3") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"M"}/></TouchableOpacity>
+                                        weekday={"D"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector
                                         fontColor={weekdays.includes("4") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("4") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"D"}/></TouchableOpacity>
+                                        weekday={"M"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector
                                         fontColor={weekdays.includes("5") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("5") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"F"}/></TouchableOpacity>
+                                        weekday={"D"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector
                                         fontColor={weekdays.includes("6") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("6") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"S"}/></TouchableOpacity>
+                                        weekday={"F"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("7")}><WeekdaySelector
                                         fontColor={weekdays.includes("7") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("7") ? "#9EAFF2" : "rgba(0,0,0,0)"}

@@ -11,6 +11,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import RepetitionView from "../components/RepetitionView";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,6 +33,7 @@ const MD3Theme = {
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
+    UpdateReminder: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
@@ -43,111 +45,47 @@ export default function MainPageList({navigation, route}: Props) {
             'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
         });
 
-    let r1: Reminder = {
-        title: 'Badge',
-        details: 'Badge nicht vergessen',
-        repetition: RepetitionType.Daily,
-        time: {
-            hours: '13',
-            minutes: '00',
-        },
-        nextReminderExecution: new Date('2023-06-10 13:00'),
-    };
+    const [fetchedReminders, setFetchedReminders] = useState<Reminder[]>([]);;
 
-    let r2: Reminder = {
-        title: 'pause',
-        details: '10 uhr pause',
-        repetition: RepetitionType.Weekly,
-        daysOfWeek: [2, 3, 4],
-        time: {
-            hours: '10',
-            minutes: '00',
-        },
-        nextReminderExecution: new Date('2023-06-14 10:00'),
-    };
+    useFocusEffect(
+        useCallback(() => {
+            const fetchReminders = async () => {
+                setFetchedReminders([]); // Clear the state before fetching reminders
 
-    let r3: Reminder = {
-        title: 'Saufen',
-        details: 'Wochenende, saufen!',
-        repetition: RepetitionType.Unique,
-        time: {
-            hours: '10',
-            minutes: '00',
-        },
-        specificUniqueDate: new Date('2023-06-12'),
-        nextReminderExecution: new Date('2023-06-12 10:00'),
-    };
-
-    let r4: Reminder = {
-        title: 'Saufen',
-        details: 'Wochenende, saufen!',
-        repetition: RepetitionType.Unique,
-        time: {
-            hours: '10',
-            minutes: '00',
-        },
-        specificUniqueDate: new Date('2023-06-13'),
-        nextReminderExecution: new Date('2023-06-13 10:00'),
-    };
-
-    let r5: Reminder = {
-        title: 'Saufen',
-        details: 'Wochenende, saufen!',
-        repetition: RepetitionType.Unique,
-        time: {
-            hours: '10',
-            minutes: '00',
-        },
-        specificUniqueDate: new Date('2023-06-14'),
-        nextReminderExecution: new Date('2023-06-14 10:00'),
-    };
-
-    let r6: Reminder = {
-        title: 'Atmen',
-        details: 'Luft ist wichtig',
-        repetition: RepetitionType.Hourly,
-        time: {
-            hours: '10',
-            minutes: '05',
-        },
-        nextReminderExecution: new Date('2023-06-09 9:05'),
-    };
-
-    const reminders = (() => {
-        const storageReminders: Reminder[] = [];
-
-        return (): Reminder[] => {
-            AsyncStorage.getAllKeys().then((storageKeys: readonly string[]) => {
+                const storageKeys: readonly string[] = await AsyncStorage.getAllKeys();
                 const getItemsPromises: Promise<void>[] = [];
 
-                for (const element of storageKeys) {
-                    const storageKey = element;
+                for (const storageKey of storageKeys) {
                     const savedReminderPromise = AsyncStorage.getItem(storageKey);
 
                     const promise = savedReminderPromise.then((savedReminder: string | null) => {
-                        if (typeof savedReminder === "string") {
+                        if (typeof savedReminder === 'string') {
                             const currentReminder = JSON.parse(savedReminder);
-                            storageReminders.push(currentReminder);
+                            setFetchedReminders((prevReminders) => [...prevReminders, currentReminder]);
                             console.log(currentReminder);
                         }
                     }).catch((error: any) => {
                         console.log(error);
                     });
+
                     getItemsPromises.push(promise);
                 }
 
-                return Promise.all(getItemsPromises).then(() => {
-                    return storageReminders;
+                Promise.all(getItemsPromises).then(() => {
+                    // All reminders have been fetched and added to state
                 });
-            });
+            };
 
-            return storageReminders; // Return the initial array immediately
-        };
-    })();
+            fetchReminders();
+
+            return () => {
+                // Cleanup function when the screen loses focus
+                // (Optional: perform any necessary cleanup here)
+            };
+        }, [])
+    );
 
 // Calling the reminders function
-    const result: Reminder[] = reminders(); //TODO: Delete this
-    console.log(result);
 
     const [fontsLoaded] = Font.useFonts({
         'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
@@ -182,23 +120,27 @@ export default function MainPageList({navigation, route}: Props) {
                     scrollEventThrottle={16}
                 >
                     <View style={styles.content}>
-                        {reminders().map((reminder: Reminder, index) => (
+                        {fetchedReminders.map((reminder: Reminder, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                onPress={() => navigation.navigate('UpdateReminder', { reminder })}
+                            >
                             <Card key={index} style={styles.card}>
-                                <Card.Content style={styles.cardContent}>
-                                    <View style={styles.cardTitleContainer}>
-                                        <Text style={[styles.cardTitle, {flex: 1}]}>{reminder.title}</Text>
-                                        <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes}
-                                                  fontSize={26}></TimeView>
-                                    </View>
-                                    <Text style={styles.cardDetail}>{reminder.details}</Text>
-                                    <View style={styles.repetitionView}>
-                                        <RepetitionView reminder={reminder}/>
-                                    </View>
-                                </Card.Content>
-                            </Card>
+                                    <Card.Content style={styles.cardContent}>
+                                        <View style={styles.cardTitleContainer}>
+                                            <Text style={[styles.cardTitle, { flex: 1 }]}>{reminder.text}</Text>
+                                            <TimeView hours={reminder.time.hours} minutes={reminder.time.minutes} fontSize={26} />
+                                        </View>
+                                        <Text style={styles.cardDetail}>{reminder.details}</Text>
+                                        <View style={styles.repetitionView}>
+                                            <RepetitionView reminder={reminder} />
+                                        </View>
+                                    </Card.Content>
+                                </Card>
                             </TouchableOpacity>
                         ))}
                     </View>
+
                 </ScrollView>
 
             </View>

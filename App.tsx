@@ -37,6 +37,7 @@ export default function App() {
                   name={"CreateReminder"}
                   component={CreateReminder}
                   />
+
               <Stack.Screen
                   name={"UpdateReminder"}
                   component={UpdateReminder}

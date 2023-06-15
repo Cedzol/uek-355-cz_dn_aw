@@ -3,7 +3,7 @@ import React, {useCallback, useState} from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import IconA from "react-native-vector-icons/AntDesign";
 import IconB from "react-native-vector-icons/Entypo";
-import {Button, Card, Checkbox, PaperProvider, Provider, TextInput} from "react-native-paper";
+import {Button, Card, Checkbox, PaperProvider, TextInput, TouchableRipple} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
 import {TimeNumber} from "../../assets/models/Time";
 import TimeView from "../components/TimeView";
@@ -15,6 +15,8 @@ import WeekdaySelector from "../molecules/WeekdaySelector";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import DropDown from "react-native-paper-dropdown";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Reminder} from '../../assets/models/Reminder';
 
 const theme = {
     "colors": {
@@ -61,15 +63,18 @@ const theme = {
     }
 }
 
-
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
+    UpdateReminder: undefined;
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, 'CreateReminder'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'UpdateReminder'>;
 
 export default function UpdateReminder({navigation, route}: Props) {
+    const reminder: Reminder = route.params.reminder;
+    const id: Readonly<undefined> | undefined = route.params; // Retrieve the ID from the route params
+
 
     const repetitionList = [
         {
@@ -86,21 +91,21 @@ export default function UpdateReminder({navigation, route}: Props) {
         }
     ]
 
-    const [text, setText] = React.useState('');
+    const [text, setText] = useState(reminder.text);
 
-    const [details, setDetails] = useState('');
+    const [details, setDetails] = useState(reminder.details);
 
-    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Daily)
+    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(reminder.repeatFrequency)
 
-    const [checked, setChecked] = React.useState(false);
+    const [checked, setChecked] = useState(false);
 
     const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
     let currentTime = new Date();
 
     const [time, setTime] = useState<TimeNumber>({
-        hours: currentTime.getHours(),
-        minutes: currentTime.getMinutes()
+        hours: parseInt(reminder.time.hours),
+        minutes: parseInt(reminder.time.minutes)
     })
 
     const [timePickerVisible, setTimePickerVisible] = useState(false);
@@ -117,7 +122,7 @@ export default function UpdateReminder({navigation, route}: Props) {
 
     const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
 
-    const [uniqueDate, setUniqueDate] = useState<Date>(currentTime)
+    const [uniqueDate, setUniqueDate] = useState<Date>(new Date())
 
     function onDatePickerDismiss() {
         setDatePickerVisible(false);
@@ -126,10 +131,6 @@ export default function UpdateReminder({navigation, route}: Props) {
     function onDatePickerConfirm(date: Date) {
         setUniqueDate(date)
         setDatePickerVisible(false);
-    }
-
-    function handleSubmit() {
-        navigation.goBack();
     }
 
     const [weekdays, setWeekdays] = useState<string[]>([])
@@ -164,23 +165,82 @@ export default function UpdateReminder({navigation, route}: Props) {
         extrapolate: 'clamp',
     });
 
+    function genUniqueId(): string {
+        const dateStr = Date
+            .now()
+            .toString(36); // convert num to base 36 and stringify
+
+        const randomStr = Math
+            .random()
+            .toString(36)
+            .substring(2, 8); // start at index 2 to skip decimal point
+
+        return `${dateStr}-${randomStr}`;
+    }
+
+    function handleSubmit() {
+        const updatedReminder = {
+            ...reminder,
+            text: text,
+            details: details,
+            time: time,
+            repeating: checked,
+            uniqueDate: uniqueDate,
+            repeatFrequency: repetitionMode,
+            daysOfWeek: weekdays,
+        };
+
+        const updatedReminderObject = JSON.stringify(updatedReminder);
+
+        AsyncStorage.mergeItem(reminder.id, updatedReminderObject).then(async () => {
+            const keys = await AsyncStorage.getAllKeys();
+            console.log(keys);
+            navigation.goBack();
+
+        });
+    }
+
+    async function handleDelete() {
+        try {
+            // Delete the item from AsyncStorage
+            await AsyncStorage.removeItem(reminder.id);
+            const keys = await AsyncStorage.getAllKeys();
+            console.log(keys);
+            navigation.goBack();
+        } catch (error) {
+            // Handle any errors that occur during the deletion
+            console.log('Error deleting item from AsyncStorage:', error);
+        }
+    }
+
     return (
         <PaperProvider theme={theme}>
             <View style={styles.container} onLayout={onLayoutRootView}>
                 <Animated.View style={[styles.topBar, {backgroundColor: topBarBackgroundColor}]}>
-                    <View style={{marginLeft: 10, flexDirection: 'row'}}>
+                    <View style={{marginLeft: 10, flexDirection: 'row', alignItems: 'center'}}>
                         <View>
                             <Button onPress={() => navigation.goBack()}>
                                 <Icon name="arrow-back-sharp" size={28} color="#DCE2F9"/>
                             </Button>
                         </View>
+                        <View style={{flex: 1, alignItems: 'center'}}>
+                            <TouchableRipple onPress={() => navigation.navigate('CreateReminder')}
+                                             rippleColor="rgba(0, 0, 0, .32)">
+                                <View style={styles.addButtonContainer}>
+                                    <Button onPress={() => handleDelete()}>
+                                        <Icon name="trash" size={28} color={"#002B73"}/>
+                                    </Button>
+                                </View>
+                            </TouchableRipple>
+                        </View>
                         <View style={{marginLeft: 'auto', marginRight: 10}}>
-                            <Button onPress={handleSubmit}>
+                            <Button onPress={() => handleSubmit()}>
                                 <IconA name={"check"} size={28} color="#DCE2F9"></IconA>
                             </Button>
                         </View>
                     </View>
                 </Animated.View>
+
 
                 <View style={styles.inputs}>
                     <TextInput
@@ -241,6 +301,7 @@ export default function UpdateReminder({navigation, route}: Props) {
                             labelStyle={{color: '#C7C6CA',}}
                             onPress={() => {
                                 setChecked(!checked);
+                                setRepetitionMode(RepetitionType.Unique)
                             }}
                             label={"Reminder wiederholt sich"}
                             color={"#B2C5FF"}/>
@@ -261,20 +322,20 @@ export default function UpdateReminder({navigation, route}: Props) {
                             />
                             <Card style={styles.card2}>
                                 <Card.Content style={styles.cardContent}>
-                                <Text style={styles.datePickerText}>Datum auswählen <IconB
-                                    name="calendar" size={28} color="#DCE2F9"/></Text>
-                                <TouchableOpacity onPress={() => setDatePickerVisible(true)}
-                                                  style={styles.datePickerBox}>
-                                    <TextInput
-                                        editable={false}
-                                        style={[styles.textFields, {
-                                            width: Dimensions.get('window').width / 1.2,
-                                            marginTop: 20
-                                        }]}
-                                        value={(moment(uniqueDate)).format('DD/MM/YYYY')}
-                                        mode={"outlined"}
-                                    />
-                                </TouchableOpacity>
+                                    <Text style={styles.datePickerText}>Datum auswählen <IconB
+                                        name="calendar" size={28} color="#DCE2F9"/></Text>
+                                    <TouchableOpacity onPress={() => setDatePickerVisible(true)}
+                                                      style={styles.datePickerBox}>
+                                        <TextInput
+                                            editable={false}
+                                            style={[styles.textFields, {
+                                                width: Dimensions.get('window').width / 1.2,
+                                                marginTop: 20
+                                            }]}
+                                            value={(moment(uniqueDate)).format('DD/MM/YYYY')}
+                                            mode={"outlined"}
+                                        />
+                                    </TouchableOpacity>
                                 </Card.Content>
                             </Card>
                         </View>
@@ -304,27 +365,27 @@ export default function UpdateReminder({navigation, route}: Props) {
                                     <TouchableOpacity onPress={() => handleWeekday("1")}><WeekdaySelector
                                         fontColor={weekdays.includes("1") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("1") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"M"}/></TouchableOpacity>
+                                        weekday={"S"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("2")}><WeekdaySelector
                                         fontColor={weekdays.includes("2") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("2") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"D"}/></TouchableOpacity>
+                                        weekday={"M"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("3")}><WeekdaySelector
                                         fontColor={weekdays.includes("3") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("3") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"M"}/></TouchableOpacity>
+                                        weekday={"D"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("4")}><WeekdaySelector
                                         fontColor={weekdays.includes("4") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("4") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"D"}/></TouchableOpacity>
+                                        weekday={"M"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("5")}><WeekdaySelector
                                         fontColor={weekdays.includes("5") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("5") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"F"}/></TouchableOpacity>
+                                        weekday={"D"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("6")}><WeekdaySelector
                                         fontColor={weekdays.includes("6") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("6") ? "#9EAFF2" : "rgba(0,0,0,0)"}
-                                        weekday={"S"}/></TouchableOpacity>
+                                        weekday={"F"}/></TouchableOpacity>
                                     <TouchableOpacity onPress={() => handleWeekday("7")}><WeekdaySelector
                                         fontColor={weekdays.includes("7") ? "#0027c2" : "#bdbfc9"}
                                         color={weekdays.includes("7") ? "#9EAFF2" : "rgba(0,0,0,0)"}
@@ -471,4 +532,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         paddingTop: 4,
     },
+    addButtonContainer: {
+        backgroundColor: '#B2C5FF',
+        borderRadius: 26,
+        elevation: 6,
+    }
 });
