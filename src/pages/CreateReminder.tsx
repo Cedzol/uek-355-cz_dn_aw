@@ -15,6 +15,7 @@ import WeekdaySelector from "../molecules/WeekdaySelector";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import DropDown from "react-native-paper-dropdown";
+import DropDownPicker from 'react-native-dropdown-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NotificationCentre from "../components/NotificationCentre";
 
@@ -92,7 +93,7 @@ export default function CreateReminder({navigation, route}: Props) {
 
     const [details, setDetails] = useState('');
 
-    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Unique)
+    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Daily)
 
     const [checked, setChecked] = useState(false);
 
@@ -339,17 +340,25 @@ export default function CreateReminder({navigation, route}: Props) {
                             </Card>
                         </View>
                         :
-                        <View style={{width: 'auto', alignSelf: 'flex-start', marginLeft: 15}}>
-                            <DropDown
-                                mode={"outlined"}
-                                visible={showDropDown}
-                                showDropDown={() => setShowDropDown(true)}
-                                onDismiss={() => setShowDropDown(false)}
+                        <View style={{width: 'auto', alignSelf: 'flex-start', marginLeft: 15, marginRight : 15}}>
+                            <DropDownPicker
+                                placeholder={"Wähle aus"}
+                                open={showDropDown}
                                 value={repetitionMode}
+                                items={repetitionList}
+                                setOpen={setShowDropDown}
                                 setValue={setRepetitionMode}
-                                list={repetitionList}
-                                dropDownItemTextStyle={{color: '#FFF', fontFamily: "ProductSans-Regular"}}
-                                dropDownItemSelectedTextStyle={{color: '#FFF', fontFamily: "ProductSans-Regular"}}
+                                style={{
+                                    backgroundColor : '#45464F',
+                                }}
+
+                                listItemContainerStyle={{
+                                    backgroundColor : '#45464F',
+                                }}
+                                textStyle={{
+                                    color: '#C7C6CA',
+                                    fontSize : 16
+                                }}
                             />
 
                             {repetitionMode === RepetitionType.Weekly && (

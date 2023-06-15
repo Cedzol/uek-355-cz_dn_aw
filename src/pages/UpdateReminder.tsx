@@ -18,6 +18,7 @@ import DropDown from "react-native-paper-dropdown";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Reminder} from '../../assets/models/Reminder';
 import NotificationCentre, {deleteNotifications} from "../components/NotificationCentre";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const theme = {
     "colors": {
@@ -385,16 +386,24 @@ export default function UpdateReminder({navigation, route}: Props) {
                         </View>
                         :
                         <View style={{width: 'auto', alignSelf: 'flex-start', marginLeft: 15}}>
-                            <DropDown
-                                mode={"outlined"}
-                                visible={showDropDown}
-                                showDropDown={() => setShowDropDown(true)}
-                                onDismiss={() => setShowDropDown(false)}
+                            <DropDownPicker
+                                placeholder={"Wähle aus"}
+                                open={showDropDown}
                                 value={repetitionMode}
+                                items={repetitionList}
+                                setOpen={setShowDropDown}
                                 setValue={setRepetitionMode}
-                                list={repetitionList}
-                                dropDownItemTextStyle={{color: '#FFF', fontFamily: "ProductSans-Regular"}}
-                                dropDownItemSelectedTextStyle={{color: '#FFF', fontFamily: "ProductSans-Regular"}}
+                                style={{
+                                    backgroundColor : '#45464F',
+                                }}
+
+                                listItemContainerStyle={{
+                                    backgroundColor : '#45464F',
+                                }}
+                                textStyle={{
+                                    color: '#C7C6CA',
+                                    fontSize : 16
+                                }}
                             />
 
                             {repetitionMode === RepetitionType.Weekly && (
