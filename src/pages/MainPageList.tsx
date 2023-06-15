@@ -3,16 +3,16 @@ import { Button, Card, DefaultTheme, Provider, TouchableRipple } from 'react-nat
 import React, { useCallback, useState, useEffect } from 'react';
 import { Reminder } from '../../assets/models/Reminder';
 import { RepetitionType } from '../../assets/models/Enums';
-import TimeView from '../components/TimeView';
+import TimeView from '../organisms/TimeView';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import RepetitionView from "../components/RepetitionView";
+import RepetitionView from "../organisms/RepetitionView";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from "@react-navigation/native";
-import NotificationCentre from "../components/NotificationCentre";
+import NotificationCentre from "../organisms/NotificationCentre";
 
 // Prevents the splash screen from automatically hiding when the component mounts
 SplashScreen.preventAutoHideAsync();

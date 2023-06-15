@@ -17,3 +17,7 @@
 - Option a auswählen für die Android umgebung
 
 - App benutzen
+
+## Figma
+
+https://www.figma.com/file/ME6hPmmVdUwUXf3Qo6hrRF/%C3%BCK_335_Gruppe_1?type=design&node-id=0-1&t=T1e1lCflUURHchvi-0

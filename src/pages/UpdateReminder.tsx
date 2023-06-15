@@ -6,7 +6,7 @@ import IconB from "react-native-vector-icons/Entypo";
 import {Button, Card, Checkbox, PaperProvider, TextInput, TouchableRipple} from "react-native-paper";
 import {TimePickerModal} from 'react-native-paper-dates'
 import {TimeNumber} from "../../assets/models/Time";
-import TimeView from "../components/TimeView";
+import TimeView from "../organisms/TimeView";
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment/moment";
@@ -17,7 +17,7 @@ import * as Font from "expo-font";
 import DropDown from "react-native-paper-dropdown";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Reminder} from '../../assets/models/Reminder';
-import NotificationCentre, {deleteNotifications} from "../components/NotificationCentre";
+import NotificationCentre, {deleteNotifications} from "../organisms/NotificationCentre";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const theme = {
