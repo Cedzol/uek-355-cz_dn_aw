@@ -97,7 +97,7 @@ export default function UpdateReminder({navigation, route}: Props) {
 
     const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(reminder.repeatFrequency)
 
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(reminder.repeating);
 
     const [showDropDown, setShowDropDown] = useState<boolean>(false);
 
@@ -133,7 +133,9 @@ export default function UpdateReminder({navigation, route}: Props) {
         setDatePickerVisible(false);
     }
 
-    const [weekdays, setWeekdays] = useState<string[]>([])
+    const [weekdays, setWeekdays] = useState<string[]>(reminder.daysOfWeek ? reminder.daysOfWeek.map(String) : []);
+
+    console.log(reminder.daysOfWeek)
 
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
