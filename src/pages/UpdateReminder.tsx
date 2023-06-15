@@ -213,7 +213,7 @@ export default function UpdateReminder({navigation, route}: Props) {
         });
 
         if (updatedReminder.repeatFrequency == RepetitionType.Weekly){
-            for (let i = 0; i < updatedReminder.daysOfWeek.length -1 ; i++){
+            for (let i = 0; i < updatedReminder.daysOfWeek.length ; i++){
                 NotificationCentre({
                         id: id + "-" + i,
                         text: text,
