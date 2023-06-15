@@ -18,6 +18,10 @@
 
 - App benutzen
 
+## Hinweise
+
+- npm install nicht vergessen
+
 ## Figma
 
 https://www.figma.com/file/ME6hPmmVdUwUXf3Qo6hrRF/%C3%BCK_335_Gruppe_1?type=design&node-id=0-1&t=T1e1lCflUURHchvi-0
