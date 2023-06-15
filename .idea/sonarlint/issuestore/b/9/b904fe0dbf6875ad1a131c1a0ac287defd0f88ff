@@ -1,6 +1,0 @@
-
-Itypescript:S1128	"(Remove this unused import of 'useFonts'.(®âæ‰ùÿÿÿÿ
-‚typescript:S1172&"aRemove the unused function parameter "route" or rename it to "_route" to make intention explicit.(¼€Ïüøÿÿÿÿ
-ftypescript:S905("FExpected an assignment or function call and instead saw an expression.(…‰›Éüÿÿÿÿ
-Gtypescript:S4326)"+Redundant use of `await` on a return value.(ü†åË
-[typescript:S1854s":Remove this useless assignment to variable "setReminders".(íşŸïûÿÿÿÿ

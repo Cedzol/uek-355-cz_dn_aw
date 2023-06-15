@@ -22,5 +22,3 @@ I
 assets/models/Reminder.ts,b\a\ba223938b7272d7821bda67d85273d8f9bc3fe4d
 7
 App.tsx,2\f\2f3db35b9bba122792d724b9b48a0aac92ebbb79
-J
-src/pages/MainPageList.tsx,b\9\b904fe0dbf6875ad1a131c1a0ac287defd0f88ff

@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="041cae2e-0496-4fcf-a7de-a69dccdc01e3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/b/9/b904fe0dbf6875ad1a131c1a0ac287defd0f88ff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/CreateReminder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/MainPageList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/MainPageList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +59,7 @@
       <workItem from="1686734461593" duration="539000" />
       <workItem from="1686735009427" duration="953000" />
       <workItem from="1686809378164" duration="289000" />
-      <workItem from="1686810758240" duration="1517000" />
+      <workItem from="1686810758240" duration="7289000" />
     </task>
     <servers />
   </component>
