@@ -12,6 +12,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import RepetitionView from "../components/RepetitionView";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from "@react-navigation/native";
+import NotificationCentre from "../components/NotificationCentre";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -145,11 +146,9 @@ export default function MainPageList({navigation, route}: Props) {
 
             </View>
             <View style={styles.addButtonContainer}>
-                <TouchableRipple onPress={() => navigation.navigate('CreateReminder')} rippleColor="rgba(0, 0, 0, .32)">
-                    <Button>
-                        <Icon name="plus" size={24} color="#DCE2F9"/>
-                    </Button>
-                </TouchableRipple>
+                <Button onPress={() => navigation.navigate('CreateReminder')}>
+                    <Icon name="plus" size={24} color="#DCE2F9"/>
+                </Button>
             </View>
         </Provider>
 
