@@ -190,7 +190,8 @@ export default function CreateReminder({navigation, route}: Props) {
         });
 
         if (identifiableReminder.repeatFrequency == RepetitionType.Weekly){
-            for (let i = 0; i < identifiableReminder.daysOfWeek.length -1 ; i++){
+            for (let i = 0; i < identifiableReminder.daysOfWeek.length; i++){
+                console.log("create notification for : " + identifiableReminder.id)
                 NotificationCentre({
                         id: id + "-" + i,
                         text: text,
