@@ -65,19 +65,25 @@ const theme = {
     }
 }
 
+// Define the type for the root stack navigation params
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
     UpdateReminder: undefined;
 };
 
+// Define the props for the UpdateReminder component
 type Props = NativeStackScreenProps<RootStackParamList, 'UpdateReminder'>;
 
-export default function UpdateReminder({navigation, route}: Props) {
+/**
+ * Component for updating a reminder.
+ */
+export default function UpdateReminder({ navigation, route }: Props) {
+    // Retrieve the reminder and ID from the route params
     const reminder: Reminder = route.params.reminder;
     const id: Readonly<undefined> | undefined = route.params; // Retrieve the ID from the route params
 
-
+    // Define the repetition options
     const repetitionList = [
         {
             label: "Stündlich",
@@ -93,6 +99,7 @@ export default function UpdateReminder({navigation, route}: Props) {
         }
     ]
 
+    // State variables
     const [text, setText] = useState(reminder.text);
 
     const [details, setDetails] = useState(reminder.details);
@@ -112,10 +119,17 @@ export default function UpdateReminder({navigation, route}: Props) {
 
     const [timePickerVisible, setTimePickerVisible] = useState(false);
 
+    /**
+     * Callback function for dismissing the time picker.
+     */
     function onTimePickerDismiss() {
         setTimePickerVisible(false)
     }
 
+    /**
+     * Callback function for confirming the selected time from the time picker.
+     * @param time - The selected time.
+     */
     function onTimePickerConfirm(time: TimeNumber) {
         setTime(time)
         console.log(time)
@@ -126,10 +140,17 @@ export default function UpdateReminder({navigation, route}: Props) {
 
     const [uniqueDate, setUniqueDate] = useState<Date>(new Date())
 
+    /**
+     * Callback function for dismissing the date picker.
+     */
     function onDatePickerDismiss() {
         setDatePickerVisible(false);
     }
 
+    /**
+     * Callback function for confirming the selected date from the date picker.
+     * @param date - The selected date.
+     */
     function onDatePickerConfirm(date: Date) {
         setUniqueDate(date)
         setDatePickerVisible(false);
@@ -139,6 +160,10 @@ export default function UpdateReminder({navigation, route}: Props) {
 
     console.log(reminder.daysOfWeek)
 
+    /**
+     * Function for handling the selection or deselection of a weekday.
+     * @param dayIndex - The index of the selected day.
+     */
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
             console.log("splice");
@@ -155,6 +180,10 @@ export default function UpdateReminder({navigation, route}: Props) {
         'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
     });
 
+    /**
+     * Callback function for handling the layout of the root view.
+     * It hides the splash screen after the fonts are loaded.
+     */
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded) {
             await SplashScreen.hideAsync();
@@ -169,6 +198,10 @@ export default function UpdateReminder({navigation, route}: Props) {
         extrapolate: 'clamp',
     });
 
+    /**
+     * Generates a unique ID for the reminder.
+     * @returns The unique ID.
+     */
     function genUniqueId(): string {
         const dateStr = Date
             .now()
@@ -182,17 +215,19 @@ export default function UpdateReminder({navigation, route}: Props) {
         return `${dateStr}-${randomStr}`;
     }
 
+    /**
+     * Handles the submission of the reminder update.
+     */
     function handleSubmit() {
-
-        if (reminder.repeatFrequency == RepetitionType.Weekly){
-            for (let i = 0; i < reminder.daysOfWeek!.length -1 ; i++){
+        // Delete notifications for the reminder
+        if (reminder.repeatFrequency == RepetitionType.Weekly) {
+            for (let i = 0; i < reminder.daysOfWeek!.length - 1; i++) {
                 deleteNotifications(reminder.id + "-" + i)
             }
-        }
-
-        else {
+        } else {
             deleteNotifications(reminder.id)
         }
+
         const updatedReminder = {
             ...reminder,
             text: text,
@@ -206,13 +241,14 @@ export default function UpdateReminder({navigation, route}: Props) {
 
         const updatedReminderObject = JSON.stringify(updatedReminder);
 
+        // Merge the updated reminder with the existing reminder in AsyncStorage
         AsyncStorage.mergeItem(reminder.id, updatedReminderObject).then(async () => {
             const keys = await AsyncStorage.getAllKeys();
             console.log(keys);
             navigation.goBack();
-
         });
 
+        // Create notifications for the updated reminder
         if (updatedReminder.repeatFrequency == RepetitionType.Weekly){
             for (let i = 0; i < updatedReminder.daysOfWeek.length ; i++){
                 NotificationCentre({
@@ -245,6 +281,9 @@ export default function UpdateReminder({navigation, route}: Props) {
         }
     }
 
+    /**
+     * Handles the deletion of the reminder.
+     */
     async function handleDelete() {
         try {
             // Delete the item from AsyncStorage

@@ -64,15 +64,23 @@ const theme = {
     }
 }
 
+// Define the type for the root stack navigation params
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
     UpdateReminder: undefined;
 };
 
+// Define the props for the UpdateReminder component
 type Props = NativeStackScreenProps<RootStackParamList, 'CreateReminder'>;
 
-export default function CreateReminder({navigation, route}: Props) {
+/**
+ * Component for creating a reminder.
+ *
+ * @param {Props} navigation - The navigation object provided by React Navigation.
+ * @param {Props} route - The route object provided by React Navigation.
+ */
+export default function CreateReminder({ navigation, route }: Props) {
 
     const repetitionList = [
         {
@@ -87,13 +95,13 @@ export default function CreateReminder({navigation, route}: Props) {
             label: "Wöchentlich",
             value: RepetitionType.Weekly
         }
-    ]
+    ];
 
     const [text, setText] = useState('');
 
     const [details, setDetails] = useState('');
 
-    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Daily)
+    const [repetitionMode, setRepetitionMode] = useState<RepetitionType>(RepetitionType.Daily);
 
     const [checked, setChecked] = useState(false);
 
@@ -104,35 +112,57 @@ export default function CreateReminder({navigation, route}: Props) {
     const [time, setTime] = useState<TimeNumber>({
         hours: currentTime.getHours(),
         minutes: currentTime.getMinutes()
-    })
+    });
 
     const [timePickerVisible, setTimePickerVisible] = useState(false);
 
+    /**
+     * Dismisses the time picker.
+     */
     function onTimePickerDismiss() {
-        setTimePickerVisible(false)
+        setTimePickerVisible(false);
     }
 
+    /**
+     * Handles the selection of a time in the time picker.
+     *
+     * @param {TimeNumber} time - The selected time.
+     */
     function onTimePickerConfirm(time: TimeNumber) {
-        setTime(time)
-        console.log(time)
-        setTimePickerVisible(false)
+        setTime(time);
+        console.log(time);
+        setTimePickerVisible(false);
     }
 
-    const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false)
+    const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false);
 
-    const [uniqueDate, setUniqueDate] = useState<Date>(currentTime)
+    const [uniqueDate, setUniqueDate] = useState<Date>(currentTime);
 
+    /**
+     * Dismisses the date picker.
+     */
     function onDatePickerDismiss() {
         setDatePickerVisible(false);
     }
 
+    /**
+     * Handles the selection of a date in the date picker.
+     *
+     * @param {Date} date - The selected date.
+     */
     function onDatePickerConfirm(date: Date) {
-        setUniqueDate(date)
+        setUniqueDate(date);
         setDatePickerVisible(false);
     }
 
-    const [weekdays, setWeekdays] = useState<string[]>([])
+    const [weekdays, setWeekdays] = useState<string[]>([]);
 
+    /**
+     * Handles the selection of a weekday.
+     * If the selected day is already included in the weekdays array, it will be removed. Otherwise, it will be added.
+     *
+     * @param {string} dayIndex - The index of the selected day.
+     */
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
             console.log("splice");
@@ -149,6 +179,10 @@ export default function CreateReminder({navigation, route}: Props) {
         'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
     });
 
+    /**
+     * Callback function invoked when the root view is laid out.
+     * It hides the splash screen after the fonts have loaded.
+     */
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded) {
             await SplashScreen.hideAsync();
@@ -162,12 +196,23 @@ export default function CreateReminder({navigation, route}: Props) {
         outputRange: ['#1D1B20', '#2F2C35'],
         extrapolate: 'clamp',
     });
+
+    /**
+     * Generates a unique ID for the reminder.
+     *
+     * @returns {string} The generated unique ID.
+     */
     function genUniqueId(): string {
         const dateStr = Date.now().toString(36); // convert num to base 36 and stringify
         const randomStr = Math.random().toString(36).substring(2, 8); // start at index 2 to skip decimal point
         return `${dateStr}-${randomStr}`;
     }
 
+    /**
+     * Handles the submission of the reminder form.
+     * It generates a unique ID for the reminder, stores the reminder in AsyncStorage,
+     * and creates notifications based on the reminder settings.
+     */
     function handleSubmit() {
         const id = genUniqueId(); // Generate a unique ID
 
@@ -218,7 +263,7 @@ export default function CreateReminder({navigation, route}: Props) {
                     },
                     uniqueDate: uniqueDate,
                     repeatFrequency: repetitionMode,
-            },
+                },
                 null, identifiableReminder.id)
         }
     }

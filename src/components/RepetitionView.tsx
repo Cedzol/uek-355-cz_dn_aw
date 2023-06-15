@@ -6,9 +6,17 @@ import { Reminder } from '../../assets/models/Reminder';
 import moment from 'moment';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-
+// Prevents the splash screen from automatically hiding when the component mounts
 SplashScreen.preventAutoHideAsync();
 
+
+/**
+ * Component for displaying the repetition information of a reminder.
+ *
+ * @param {Object} props - The component props.
+ * @param {Reminder} props.reminder - The reminder object.
+ * @returns {JSX.Element} The rendered repetition view component.
+ */
 export default function RepetitionView(props: { reminder: Reminder }) {
     const { reminder } = props;
 
@@ -65,6 +73,12 @@ export default function RepetitionView(props: { reminder: Reminder }) {
     );
 }
 
+/**
+ * Get the display value for a repetition type.
+ *
+ * @param {RepetitionType} repetitionType - The repetition type.
+ * @returns {string} The display value for the repetition type.
+ */
 const getRepeatFrequency = (repetitionType: RepetitionType): string => {
     switch (repetitionType) {
         case RepetitionType.Unique:

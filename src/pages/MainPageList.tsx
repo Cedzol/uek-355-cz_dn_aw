@@ -1,19 +1,20 @@
-import {Animated, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {Button, Card, DefaultTheme, Provider, TouchableRipple} from 'react-native-paper';
-import React, {useCallback, useState, useEffect} from 'react';
-import {Reminder} from '../../assets/models/Reminder';
-import {RepetitionType} from '../../assets/models/Enums';
+import { Animated, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Card, DefaultTheme, Provider, TouchableRipple } from 'react-native-paper';
+import React, { useCallback, useState, useEffect } from 'react';
+import { Reminder } from '../../assets/models/Reminder';
+import { RepetitionType } from '../../assets/models/Enums';
 import TimeView from '../components/TimeView';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
-import {useFonts} from 'expo-font';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import RepetitionView from "../components/RepetitionView";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect} from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import NotificationCentre from "../components/NotificationCentre";
 
+// Prevents the splash screen from automatically hiding when the component mounts
 SplashScreen.preventAutoHideAsync();
 
 const MD3Theme = {
@@ -31,6 +32,9 @@ const MD3Theme = {
     },
 };
 
+/**
+ * Stack param list for the root stack navigator.
+ */
 type RootStackParamList = {
     MainPageList: undefined;
     CreateReminder: undefined;
@@ -39,15 +43,43 @@ type RootStackParamList = {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MainPageList'>;
 
-export default function MainPageList({navigation, route}: Props) {
+/**
+ * Main page list component.
+ * @param navigation - The navigation object.
+ * @param route - The route object.
+ */
+export default function MainPageList({ navigation, route }: Props) {
+    // Load fonts
+    const [fontsLoaded] = Font.useFonts({
+        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
+    });
 
-     async () =>
-        await Font.loadAsync({
-            'ProductSans-Regular': require('../fonts/ProductSans-Regular.ttf'),
-        });
+    /**
+     * Callback function for onLayout event of the root view.
+     * @returns {Promise<void>} - A promise that resolves when the fonts are loaded and the splash screen is hidden.
+     */
+    const onLayoutRootView = useCallback(async () => {
+        if (fontsLoaded) {
+            await SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
 
-    const [fetchedReminders, setFetchedReminders] = useState<Reminder[]>([]);;
+    // Hide splash screen if fonts are loaded
+    useEffect(() => {
+        onLayoutRootView();
+    }, [onLayoutRootView]);
 
+    const scrollY = new Animated.Value(0);
+    const topBarBackgroundColor = scrollY.interpolate({
+        inputRange: [0, 100],
+        outputRange: ['#1D1B20', '#2F2C35'],
+        extrapolate: 'clamp',
+    });
+
+    // State to store fetched reminders
+    const [fetchedReminders, setFetchedReminders] = useState<Reminder[]>([]);
+
+    // Fetch reminders when the screen gains focus
     useFocusEffect(
         useCallback(() => {
             const fetchReminders = async () => {
@@ -85,29 +117,6 @@ export default function MainPageList({navigation, route}: Props) {
             };
         }, [])
     );
-
-// Calling the reminders function
-
-    const [fontsLoaded] = Font.useFonts({
-        'ProductSans-Regular': require('./../fonts/ProductSans-Regular.ttf'),
-    });
-
-    const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
-            await SplashScreen.hideAsync();
-        }
-    }, [fontsLoaded]);
-
-    if (!fontsLoaded) {
-        return null;
-    }
-
-    const scrollY = new Animated.Value(0);
-    const topBarBackgroundColor = scrollY.interpolate({
-        inputRange: [0, 100],
-        outputRange: ['#1D1B20', '#2F2C35'],
-        extrapolate: 'clamp',
-    });
 
     return (
         <Provider theme={MD3Theme}>

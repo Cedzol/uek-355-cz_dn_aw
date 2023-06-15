@@ -1,6 +1,15 @@
 import {StyleSheet, Text, View} from "react-native";
 import {useEffect, useState} from "react";
 
+/**
+ * Component for displaying a time view with hours and minutes.
+ *
+ * @param {any} props - The component props.
+ * @param {string} props.hours - The hours value to display.
+ * @param {string} props.minutes - The minutes value to display.
+ * @param {number} props.fontSize - The font size of the time view.
+ * @returns {JSX.Element} The rendered time view component.
+ */
 export default function TimeView (props : any){
 
     const [hours, setHours] = useState<string>(props.hours)
