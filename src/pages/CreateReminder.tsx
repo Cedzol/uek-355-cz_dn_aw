@@ -130,7 +130,6 @@ export default function CreateReminder({ navigation, route }: Props) {
      */
     function onTimePickerConfirm(time: TimeNumber) {
         setTime(time);
-        console.log(time);
         setTimePickerVisible(false);
     }
 
@@ -165,12 +164,9 @@ export default function CreateReminder({ navigation, route }: Props) {
      */
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
-            console.log("splice");
             const newWeekdays = weekdays.filter((day) => day !== dayIndex);
-            console.log(newWeekdays);
             setWeekdays(newWeekdays);
         } else {
-            console.log("add");
             setWeekdays((prevWeekdays) => [...prevWeekdays, dayIndex]);
         }
     }
@@ -231,13 +227,11 @@ export default function CreateReminder({ navigation, route }: Props) {
 
         AsyncStorage.setItem(id, identifiableReminderObject).then(async () => {
             const keys = await AsyncStorage.getAllKeys();
-            console.log(keys);
             navigation.goBack();
         });
 
         if (identifiableReminder.repeatFrequency == RepetitionType.Weekly){
             for (let i = 0; i < identifiableReminder.daysOfWeek.length; i++){
-                console.log("create notification for : " + identifiableReminder.id)
                 NotificationCentre({
                         id: id + "-" + i,
                         text: text,

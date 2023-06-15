@@ -8,7 +8,6 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
         const registerForPushNotifications = async () => {
             const { status } = await Notifications.requestPermissionsAsync();
             if (status !== 'granted') {
-                console.log('Permission to receive notifications was denied');
                 return;
             }
         };
@@ -65,8 +64,6 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
                                     body: reminder.details,
                                 },
                                 trigger : trigger
-                            }).then((notificationId) => {
-                                console.log('Scheduled notification:', notificationId);
                             });
                         };
 
@@ -77,10 +74,8 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
                                 const now = new Date();
                                 const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, +reminder.time.minutes, 0);
                                 const timeout = nextHour.getTime() - now.getTime();
-                                console.log("reschedule")
 
                                 setTimeout(() => {
-                                    console.log("rescheduled")
                                     notificationRequest();
                                     scheduleNextNotification();
                                 }, timeout);
@@ -110,7 +105,6 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
             title: 'Immediate Notification',
             body: 'Hello',
         });
-        console.log('Notification sent');
     };
 
 }

@@ -132,7 +132,6 @@ export default function UpdateReminder({ navigation, route }: Props) {
      */
     function onTimePickerConfirm(time: TimeNumber) {
         setTime(time)
-        console.log(time)
         setTimePickerVisible(false)
     }
 
@@ -158,20 +157,15 @@ export default function UpdateReminder({ navigation, route }: Props) {
 
     const [weekdays, setWeekdays] = useState<string[]>(reminder.daysOfWeek ? reminder.daysOfWeek.map(String) : []);
 
-    console.log(reminder.daysOfWeek)
-
     /**
      * Function for handling the selection or deselection of a weekday.
      * @param dayIndex - The index of the selected day.
      */
     function handleWeekday(dayIndex: string) {
         if (weekdays.includes(dayIndex)) {
-            console.log("splice");
             const newWeekdays = weekdays.filter((day) => day !== dayIndex);
-            console.log(newWeekdays);
             setWeekdays(newWeekdays);
         } else {
-            console.log("add");
             setWeekdays((prevWeekdays) => [...prevWeekdays, dayIndex]);
         }
     }
@@ -244,7 +238,6 @@ export default function UpdateReminder({ navigation, route }: Props) {
         // Merge the updated reminder with the existing reminder in AsyncStorage
         AsyncStorage.mergeItem(reminder.id, updatedReminderObject).then(async () => {
             const keys = await AsyncStorage.getAllKeys();
-            console.log(keys);
             navigation.goBack();
         });
 
@@ -289,7 +282,6 @@ export default function UpdateReminder({ navigation, route }: Props) {
             // Delete the item from AsyncStorage
             await AsyncStorage.removeItem(reminder.id);
             const keys = await AsyncStorage.getAllKeys();
-            console.log(keys);
             navigation.goBack();
         } catch (error) {
             // Handle any errors that occur during the deletion

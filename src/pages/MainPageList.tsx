@@ -95,7 +95,6 @@ export default function MainPageList({ navigation, route }: Props) {
                         if (typeof savedReminder === 'string') {
                             const currentReminder = JSON.parse(savedReminder);
                             setFetchedReminders((prevReminders) => [...prevReminders, currentReminder]);
-                            console.log(currentReminder);
                         }
                     }).catch((error: any) => {
                         console.log(error);
