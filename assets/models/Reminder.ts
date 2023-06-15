@@ -9,7 +9,7 @@ export interface Reminder {
     repeatFrequency : RepetitionType // unique, hourly, daily, weekly
     uniqueDate? : Date // if unique repetition, what Date?
     daysOfWeek? : number[], // if weekly repetition, on which days of week
-    nextReminderExecution : Date
+    nextReminderExecution? : Date
 }
 
 // days of week

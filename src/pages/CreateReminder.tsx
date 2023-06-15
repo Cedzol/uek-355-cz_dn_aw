@@ -16,6 +16,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import DropDown from "react-native-paper-dropdown";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NotificationCentre from "../components/NotificationCentre";
 
 const theme = {
     "colors": {
@@ -187,6 +188,37 @@ export default function CreateReminder({navigation, route}: Props) {
             console.log(keys);
             navigation.goBack();
         });
+
+        if (identifiableReminder.repeatFrequency == RepetitionType.Weekly){
+            for (let i = 0; i < identifiableReminder.daysOfWeek.length -1 ; i++){
+                NotificationCentre({
+                        id: id + "-" + i,
+                        text: text,
+                        details: details,
+                        time: {
+                            hours : identifiableReminder.time.hours.toString(),
+                            minutes : identifiableReminder.time.minutes.toString(),
+                        },
+                        uniqueDate: uniqueDate,
+                        repeatFrequency: repetitionMode,
+                    },
+                    +identifiableReminder.daysOfWeek[i], identifiableReminder.id)
+            }
+        }
+        else {
+            NotificationCentre({
+                    id: id,
+                    text: text,
+                    details: details,
+                    time: {
+                        hours : identifiableReminder.time.hours.toString(),
+                        minutes : identifiableReminder.time.minutes.toString(),
+                    },
+                    uniqueDate: uniqueDate,
+                    repeatFrequency: repetitionMode,
+            },
+                null, identifiableReminder.id)
+        }
     }
 
 

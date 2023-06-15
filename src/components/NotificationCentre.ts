@@ -30,25 +30,25 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
                         let trigger : {}= {
                         }
 
-                        if (reminder.repetition == RepetitionType.Hourly) {
+                        if (reminder.repeatFrequency == RepetitionType.Hourly) {
                             trigger = {
                                 hour : +reminder.time.hours,
                                 minute : +reminder.time.minutes,
                                 repeats : true
                             }
-                        } else if (reminder.repetition == RepetitionType.Daily){
+                        } else if (reminder.repeatFrequency == RepetitionType.Daily){
                             trigger = {
                                 hour : +reminder.time.hours,
                                 minute : +reminder.time.minutes,
                                 repeats : true
                             }
-                        } else if (reminder.repetition == RepetitionType.Unique){
-                            reminder.specificUniqueDate!.setHours(+reminder.time.hours);
-                            reminder.specificUniqueDate!.setMinutes(+reminder.time.minutes)
+                        } else if (reminder.repeatFrequency == RepetitionType.Unique){
+                            reminder.uniqueDate!.setHours(+reminder.time.hours);
+                            reminder.uniqueDate!.setMinutes(+reminder.time.minutes)
                             trigger = {
-                                date : reminder.specificUniqueDate!
+                                date : reminder.uniqueDate!
                             }
-                        } else if (reminder.repetition == RepetitionType.Weekly){
+                        } else if (reminder.repeatFrequency == RepetitionType.Weekly){
                             trigger = {
                                 hour : +reminder.time.hours,
                                 minute : +reminder.time.minutes,
@@ -61,7 +61,7 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
                             Notifications.scheduleNotificationAsync({
                                 identifier : identifier,
                                 content: {
-                                    title: reminder.title,
+                                    title: reminder.text,
                                     body: reminder.details,
                                 },
                                 trigger : trigger
@@ -72,7 +72,7 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
 
                         notificationRequest()
 
-                        if (reminder.repetition == RepetitionType.Hourly){
+                        if (reminder.repeatFrequency == RepetitionType.Hourly){
                             const scheduleNextNotification = () => {
                                 const now = new Date();
                                 const nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, +reminder.time.minutes, 0);
@@ -115,7 +115,6 @@ export default function NotificationCentre(reminder : Reminder, weekday : number
 
 }
 
-export function updateNotifications(reminder : Reminder, weekday : number | null, identifier : string){
+export function deleteNotifications(identifier : string){
     Notifications.cancelScheduledNotificationAsync(identifier);
-    NotificationCentre(reminder, weekday, identifier)
 }

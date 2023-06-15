@@ -17,6 +17,7 @@ import * as Font from "expo-font";
 import DropDown from "react-native-paper-dropdown";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Reminder} from '../../assets/models/Reminder';
+import NotificationCentre, {deleteNotifications} from "../components/NotificationCentre";
 
 const theme = {
     "colors": {
@@ -179,6 +180,16 @@ export default function UpdateReminder({navigation, route}: Props) {
     }
 
     function handleSubmit() {
+
+        if (reminder.repeatFrequency == RepetitionType.Weekly){
+            for (let i = 0; i < reminder.daysOfWeek!.length -1 ; i++){
+                deleteNotifications(reminder.id + "-" + i)
+            }
+        }
+
+        else {
+            deleteNotifications(reminder.id)
+        }
         const updatedReminder = {
             ...reminder,
             text: text,
@@ -198,6 +209,37 @@ export default function UpdateReminder({navigation, route}: Props) {
             navigation.goBack();
 
         });
+
+        if (updatedReminder.repeatFrequency == RepetitionType.Weekly){
+            for (let i = 0; i < updatedReminder.daysOfWeek.length -1 ; i++){
+                NotificationCentre({
+                        id: id + "-" + i,
+                        text: text,
+                        details: details,
+                        time: {
+                            hours : updatedReminder.time.hours.toString(),
+                            minutes : updatedReminder.time.minutes.toString(),
+                        },
+                        uniqueDate: uniqueDate,
+                        repeatFrequency: repetitionMode,
+                    },
+                    +updatedReminder.daysOfWeek[i], updatedReminder.id)
+            }
+        }
+        else {
+            NotificationCentre({
+                    id: id!,
+                    text: text,
+                    details: details,
+                    time: {
+                        hours : updatedReminder.time.hours.toString(),
+                        minutes : updatedReminder.time.minutes.toString(),
+                    },
+                    uniqueDate: uniqueDate,
+                    repeatFrequency: repetitionMode,
+                },
+                null, updatedReminder.id)
+        }
     }
 
     async function handleDelete() {
